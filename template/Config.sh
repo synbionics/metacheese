@@ -25,7 +25,7 @@ done
 
 #Variabili di configurazione 04
 04_dir1="$GROUP/common/metaphlan_databases" #directory di database
-04_dir2="/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" #directory di campioni
+04_dir2="/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" #directory dwi campioni
 04_dir3="/hpc/group/G_MICRO/DOPnonDOP_noema/03_metaphlan_output" #directory di output
 
 cp template_04.metaphlan.sh 04.metaphlan.sh
@@ -33,4 +33,49 @@ cp template_04.metaphlan.sh 04.metaphlan.sh
 for var in 1 2 3; do
     eval value=\$04_dir${var}
     sed -i "s|@04_dir${var}@|$value|g" 04.metaphlan.sh
+done
+
+#Variabili di configurazione 05
+05_dir1="/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/temporanea" #mkdir
+05_dir2="/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" #directory dei campioni
+
+cp template_05.spades.assembly.sh 05.spades.assembly.sh
+
+for var in 1 2; do
+    eval value=\$05_dir${var}
+    sed -i "s|@05_var${var}@|$value|g" template_05.spades.assembly.sh
+done
+
+#Variabili di configurazione 06
+06_dir1="/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/" #cd
+06_dir2="/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs" #mkdir e secondo cd
+06_dir3="/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs/filtered" #secondo mkdir
+
+cp template_06.filter.sh template_06.filter.sh
+
+
+for var in 1 2 3; do
+    eval value=\$06_dir${var}
+    sed -i "s|@06_var${var}@|$value|g" template_06.filter.sh
+done
+
+#Variabili di configurazione 07
+
+07_dir1="/hpc/group/G_MICRO/DOPnonDOP_noema/06_Bowtie_Index" #directory di output
+07_dir2="/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs/filtered" #directory di input
+
+sed s/@07_var1@/${07_dir1}/g template_07.bowtie-MAG_database.sh > 07.bowtie-MAG_database.sh
+sed -i s/@07_var2@/${07_dir2}/g 07.bowtie-MAG_database.sh
+
+#Variabili di configurazione 08
+
+08-09_dir1="/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" #directory di fastq
+08-09_dir2="/hpc/group/G_MICRO/DOPnonDOP_noema/06_Bowtie_Index" #directory di index
+08-09_dir3="/hpc/group/G_MICRO/DOPnonDOP_noema/07_Bowtie_map" #directory di output
+
+cp template_08-09.mapp_coverage.sh 08-09.mapp_coverage.sh
+
+for var in 1 2 3; do
+    eval value=\$08-09_dir${var}
+    sed -i "s|@08-09_var${var}@|$value|g" 08-09.mapp_coverage.sh
 done

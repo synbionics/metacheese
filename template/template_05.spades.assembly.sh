@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # lo script è lanciato dalla cartella
-mkdir -p @05_spadesTemporanea@
-cd @05_spadesTemporanea@ 
+mkdir -p @05_var1@
+cd @05_var1@ 
 #creata in precedenza
 
 module load spades/3.13.0
 
-campioni_folder="@05_dirSample@" #domanda
-output_folder="@05_outputSpades@"
+campioni_folder="@05_var2@" #domanda
+output_folder="@05_var1@"
 # List all forward read files and sort them
 samples=($(ls -1 ${campioni_folder}/*fq.1.gz | sort)) #array di campioni ordinati alfabeticmente
 
