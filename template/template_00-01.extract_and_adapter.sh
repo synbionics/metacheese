@@ -5,8 +5,8 @@ module load adapterremoval
 
 # Step 1: Estrazione dei file .fq.gz dagli archivi .tar
 cd /hpc/archive/G_MICRO/rawdata/ # Dove sono i file .tar
-output_dir00="@00-01O_Output00@"
-output_dir01="@00-01O_Output01@"
+output_dir00="@00-01_var1@"
+output_dir01="@00-01_var2@"
 
 echo "Estrazione dei file .fq.gz dagli archivi .tar..."s
 for tar_file in /hpc/archive/G_MICRO/rawdata/X204SC24020161-Z01-F003_01.tar \

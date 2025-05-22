@@ -7,9 +7,9 @@ module load apptainer
 module load metaphlan
 
 # 1. Impostazione cartelle e variabili
-DEFAULT_DB_FOLDER="@04_metaphlan_db@"
-campioni_folder="@04_campioni@"
-output_folder="@04_output@"
+DEFAULT_DB_FOLDER="@04_var1@"
+sample_folder="@04_var2@"
+output_folder="@04_var3@"
 
 mkdir -p "$DEFAULT_DB_FOLDER"
 if [ ! -d "$DEFAULT_DB_FOLDER" ]; then

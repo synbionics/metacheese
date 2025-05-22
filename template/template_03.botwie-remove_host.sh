@@ -4,10 +4,10 @@
 module load bowtie2/2.3.3.1
 
 # Ottieni il percorso della directory corrente
-sample_directory="@03_Sample@"
+sample_directory="@03_var1@"
 
 # Crea cartella di output "mkdir -p /hpc/group/G_MICRO/CoagMicroGP_shotgun/02_Bowtie2_output"
-output_dir="@03_Output@"
+output_dir="@03_var2@"
 # oppure qui usando
 mkdir -p "$output_dir"
  
@@ -22,7 +22,7 @@ for file_L1 in "$sample_directory"/*cleaned_L1.fq.gz; do
         # Esegui il comando bowtie2 con i nomi dei file correnti
         # riga 27, forse, rimuovibile
 
-        meta_database=@03_Meta_database@
+        meta_database=@03_var3@
         bowtie2 -x $meta_database \
 		-1 "$file_L1" -2 "$file_L2" \
 	        -q --phred33 --local \
