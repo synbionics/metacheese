@@ -36,7 +36,7 @@ for file_L1 in "$output_dir"/*_1.fq.gz; do
         --file1 "$file_L1" --file2 "$file_L2" \
         --output1 "$output_dir/${sample_name}_cleaned_L1.fq.gz" \
         --output2 "$output_dir/${sample_name}_cleaned_L2.fq.gz" \
-        --threads 80 --gzip --minlength 50 --trimqualities --minquality 30 --trimns --maxns 10 --trim5p 2 --trim3p 2
+        --threads @01_par1@ --gzip --minlength @01_par2@ --trimqualities --minquality @01_par3@ --trimns --maxns @01_par4@ --trim5p @01_par5@ --trim3p @01_par6@
 done
 
 echo "Rimozione degli adattatori completata."

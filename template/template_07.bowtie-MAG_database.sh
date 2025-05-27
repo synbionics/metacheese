@@ -13,6 +13,6 @@ for file in "$input_folder"/*.fasta; do
 
     #Domanda: perchè di nuovo bowtie2-build?
     # Esegui bowtie2-build per ogni file
-    bowtie2-build "$file" "$output_folder/${file_name}_index_base" -p 32 #Per ogni file .fasta viene fatto bowtie
+    bowtie2-build "$file" "$output_folder/${file_name}_index_base" -p @07_par1@ #Per ogni file .fasta viene fatto bowtie
     #bowtie crea un indice di genoma che servirà successivamete per l'allineamento delle letture
 done

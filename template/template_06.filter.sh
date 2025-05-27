@@ -13,7 +13,7 @@ cd @06_var2@
 
 mkdir -p @06_var3@
 
-find . -type f -name "*..fasta" -print0 | xargs -0 -P 32 -I {} bash -c 'x="{}"; output_dir="filtered/$(dirname "$x")"; mkdir -p "$output_dir"; awk "BEGIN{RS=\">\";ORS=\"\"} length(\$0)>500 {print \">\"\$0}" "$x" > "$output_dir/${x##*/}_sort.fasta"'
+find . -type f -name "*..fasta" -print0 | xargs -0 -P @06_filter1@ -I {} bash -c 'x="{}"; output_dir="filtered/$(dirname "$x")"; mkdir -p "$output_dir"; awk "BEGIN{RS=\">\";ORS=\"\"} length(\$0)>500 {print \">\"\$0}" "$x" > "$output_dir/${x##*/}_sort.fasta"'
 
 #Ordina e filtra i file contigs generati da spades in base alla lunghezza delle sequenze
 #Il comando "find" filtra i contigs

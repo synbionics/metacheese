@@ -40,7 +40,7 @@ apptainer exec "$METAPHLAN_CONTAINER" merge_metaphlan_tables.py \
 
 # 4. Calcolo diversità alpha
 for metric in richness shannon simpson gini; do
-    apptainer exec "$METAPHLAN_CONTAINER" Rscript /opt/micromamba/envs/metaphlan/lib/python3.12/site-packages/metaphlan/utils/calculate_diversity.R \
+    apptainer exec "$METAPHLAN_CONTAINER" Rscript @04_Rscript@ \
         -f "$output_folder/merged_abundance_table.txt" \
         -d alpha \
         -m "$metric" \
@@ -49,7 +49,7 @@ done
 
 # 5. Calcolo diversità beta
 for metric in bray-curtis jaccard weighted-unifrac unweighted-unifrac clr aitchison; do
-    apptainer exec "$METAPHLAN_CONTAINER" Rscript /opt/micromamba/envs/metaphlan/lib/python3.12/site-packages/metaphlan/utils/calculate_diversity.R \
+    apptainer exec "$METAPHLAN_CONTAINER" Rscript @04_Rscript@ \
         -f "$output_folder/merged_abundance_table.txt" \
         -d beta \
         -m "$metric" \

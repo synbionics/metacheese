@@ -19,7 +19,7 @@ nome_campione=$(basename "$sample" fq.1.gz)
 # Run SPAdes on the specific sample
 spades.py -1 "${campioni_folder}/${nome_campione}fq.1.gz" \
           -2 "${campioni_folder}/${nome_campione}fq.2.gz" \
-          --meta -t 16 --memory 350 \
+          --meta -t @05_par1@ --memory @05_par2@ \
           --only-assembler \
           -o "$output_folder/${nome_campione}"
 
