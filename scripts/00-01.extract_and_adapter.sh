@@ -4,17 +4,17 @@ module load apptainer
 module load adapterremoval
 
 # Step 1: Estrazione dei file .fq.gz dagli archivi .tar
-cd @00-01_var1@ # Dove sono i file .tar
-output_dir00="@00-01_var2@"
-output_dir01="@00-01_var3@"
+cd /hpc/archive/G_MICRO/rawdata/ # Dove sono i file .tar
+output_dir1="/hpc/group/G_MICRO/DOPnonDOP_noema/rawdata"
+output_dir2="/hpc/group/G_MICRO/DOPnonDOP_noema/01_AdpRem_output"
 
-echo "Estrazione dei file .fq.gz dagli archivi .tar..."s
-for tar_file in @00-01_var4@ \
-                @00-01_var5@; do
+echo "Estrazione dei file .fq.gz dagli archivi .tar..."
+for tar_file in /hpc/archive/G_MICRO/rawdata/X204SC24020161-Z01-F003_01.tar \
+                /hpc/archive/G_MICRO/rawdata/X204SC24020161-Z01-F003_02.tar; do
     tar -tf "$tar_file" | grep -E '^D?_?PR_[0-9]+|^ND_[0-9]+.*\.fq\.gz$' | while read -r filepath; do
         filename=$(basename "$filepath")  # Estrae solo il nome del file
-        tar -xf "$tar_file" -C "$output_dir00" --strip-components=$(echo "$filepath" | tr -cd '/' | wc -c) "$filepath"
-        mv "$output_dir00/$filepath" "$output_dir00/$filename"
+        tar -xf "$tar_file" -C "$output_dir1" --strip-components=$(echo "$filepath" | tr -cd '/' | wc -c) "$filepath"
+        mv "$output_dir1/$filepath" "$output_dir1/$filename"
     done
 done
 
@@ -36,7 +36,7 @@ for file_L1 in "$output_dir"/*_1.fq.gz; do
         --file1 "$file_L1" --file2 "$file_L2" \
         --output1 "$output_dir/${sample_name}_cleaned_L1.fq.gz" \
         --output2 "$output_dir/${sample_name}_cleaned_L2.fq.gz" \
-        --threads @00-01_par1@ --gzip --minlength @00-01_par2@ --trimqualities --minquality @00-01_par3@ --trimns --maxns @00-01_par4@ --trim5p @00-01_par5@ --trim3p @00-01_par6@
+        --threads 80 --gzip --minlength 50 --trimqualities --minquality 30 --trimns --maxns 10 --trim5p 2 --trim3p 2
 done
 
 echo "Rimozione degli adattatori completata."

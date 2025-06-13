@@ -1,10 +1,4 @@
-#!/bin/bash --login
-# filepath: c:\Users\davip\Desktop\script bioinformatica\04.metaphlan_full_pipeline.sh
-
-shopt -q login_shell || exit 1
-
-module load apptainer
-module load metaphlan
+#!/bin/bash
 
 # 1. Impostazione cartelle e variabili
 DEFAULT_DB_FOLDER="@04_var1@"
@@ -18,13 +12,12 @@ if [ ! -d "$DEFAULT_DB_FOLDER" ]; then
 fi
 mkdir -p "$output_folder"
 
-# 2. Profilazione tassonomica per ogni campione (solo se SLURM_ARRAY_TASK_ID è definito)
 if [ -n "$SLURM_ARRAY_TASK_ID" ]; then
-    file=$(ls "$campioni_folder"/*fq.1.gz | sed -n "$((SLURM_ARRAY_TASK_ID + 1))p")
+    file=$(ls "$sample_folder"/*fq.1.gz | sed -n "$((SLURM_ARRAY_TASK_ID + 1))p")
     nome_campione=$(basename "$file" .fq.1.gz)
 
-    apptainer exec "$METAPHLAN_CONTAINER" metaphlan \
-        "$campioni_folder/${nome_campione}.fq.1.gz","$campioni_folder/${nome_campione}.fq.2.gz" \
+    metaphlan \
+        "$sample_folder/${nome_campione}.fq.1.gz","$sample_folder/${nome_campione}.fq.2.gz" \
         --bowtie2db "$DEFAULT_DB_FOLDER" \
         --input_type fastq \
         --nproc 16 \
@@ -34,24 +27,21 @@ if [ -n "$SLURM_ARRAY_TASK_ID" ]; then
     exit 0
 fi
 
-# 3. Merge dei profili tassonomici (da lanciare senza SLURM_ARRAY_TASK_ID)
-apptainer exec "$METAPHLAN_CONTAINER" merge_metaphlan_tables.py \
-    "$output_folder"/*.txt > "$output_folder/merged_abundance_table.txt"
+# Merge dei profili tassonomici
+merge_metaphlan_tables.py "$output_folder"/*.txt > "$output_folder/merged_abundance_table.txt"
 
-# 4. Calcolo diversità alpha
+# Calcolo diversità alpha
 for metric in richness shannon simpson gini; do
-    apptainer exec "$METAPHLAN_CONTAINER" Rscript @04_Rscript@ \
+    Rscript @04_Rscript@ \
         -f "$output_folder/merged_abundance_table.txt" \
         -d alpha \
-        -m "$metric" \
-        #-o "$output_folder/alpha_diversity_${metric}.txt"
+        -m "$metric"
 done
 
-# 5. Calcolo diversità beta
+# Calcolo diversità beta
 for metric in bray-curtis jaccard weighted-unifrac unweighted-unifrac clr aitchison; do
-    apptainer exec "$METAPHLAN_CONTAINER" Rscript @04_Rscript@ \
+    Rscript @04_Rscript@ \
         -f "$output_folder/merged_abundance_table.txt" \
         -d beta \
-        -m "$metric" \
-        #-o "$output_folder/beta_diversity_${metric}.txt"
+        -m "$metric"
 done

@@ -1,0 +1,80 @@
+step00_01:
+  dir1: "/hpc/archive/G_MICRO/rawdata/"         # comando cd per dove sono i campioni .tar
+  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/rawdata" # directory di output estrazione
+  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/01_AdpRem_output" # directory di output AdapterRemoval
+  dir4: "/hpc/archive/G_MICRO/rawdata/X204SC24020161-Z01-F003_01.tar" # file tar 01
+  dir5: "/hpc/archive/G_MICRO/rawdata/X204SC24020161-Z01-F003_02.tar" # file tar 02
+  par1: 80    # threads
+  par2: 50    # lunghezza minima
+  par3: 30    # qualità minima
+  par4: 10    # max ns
+  par5: 2     # trim5p
+  par6: 2     # trim3p
+
+step02:
+  reference_genome: "/hpc/home/luca.bettera/Downloads/ncbi_dataset/data/GCA_002263795.4/GCA_002263795.4_ARS-UCD2.0_genomic.fna Bos_taurus"
+
+step03:
+  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/01_AdpRem_output" # directory di input
+  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" # directory di output
+  dir3: "/hpc/group/G_MICRO/Metagenomica-database/Bos_taurus/Bos_taurus.bt2" # database
+
+step04:
+  dir1: "$GROUP/common/metaphlan_databases" # directory di database
+  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" # directory dwi campioni
+  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/03_metaphlan_output" # directory di output
+  rscript: "/opt/micromamba/envs/metaphlan/lib/python3.12/site-packages/metaphlan/utils/calculate_diversity.R" # script R
+
+step05:
+  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/temporanea" # mkdir
+  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" # directory dei campioni
+
+step06:
+  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/" # cd
+  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs" # mkdir e secondo cd
+  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs/filtered" # secondo mkdir
+  filter1: 32    # filtro parallel
+  filter2: 500   # filtro lunghezza minima
+  filter3: "filtered" # filtro dir output
+
+step07:
+  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/06_Bowtie_Index" # directory di output
+  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs/filtered" # directory di input
+  par1: 32
+
+step08_09:
+  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" # directory di fastq
+  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/06_Bowtie_Index" # directory di index
+  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/07_Bowtie_map" # directory di output
+
+step10_11:
+  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/07_Bowtie_map" # directory di input
+  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/08_metabat_depth" # directory di output depth
+  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs/filtered" # directory di input contig
+  dir4: "/hpc/group/G_MICRO/DOPnonDOP_noema/09_metabat_MAG" # directory di output metabat
+  dir5: "/hpc/group/G_MICRO/DOPnonDOP_noema/09b_metabat_MAG" # directory di output metabat 11b
+  par1: 1500   # lunghezza minima contig
+  par2: 32     # threads
+
+step12_13:
+  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/09_metabat_MAG" # directory di input
+  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/10_checkm" # directory di output checkm
+  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/10_checkm2" # directory di output checkm2
+  par1: 32     # threads checkm
+  par2: 32     # threads pplacer
+  par3: 30     # threads checkm2
+
+step14:
+  var1: "/percorso/al/quality_report.tsv"
+  var2: "/percorso/ai_MAGs_originali"
+  var3: "/percorso/ai_MAGs_filtrati"
+  var4: "/percorso/a_tutti_i_MAGs"
+  var5: 50
+  var6: 10
+  var7: "my-metadata2.txt"
+  var8: "my-metadata_thermophilus.txt"
+
+step15:
+  var1: "/hpc/group/G_MICRO/DOPnonDOP_noema/11b_filtered_MAG_thermophilus/my-metadata_thermophilus.txt" # directory di input
+  par1: "s12b_tormes_thermophilus/" # directory di output
+  par2: 32 # threads
