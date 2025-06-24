@@ -1,1 +1,46 @@
 # metacheese
+metacheese è una pipeline modulare per l’elaborazione di dati metagenomici, confezionata in un contenitore Docker che integra strumenti bioinformatici legacy e moderni in ambienti isolati per massima compatibilità e replicabilità.
+
+metacheese/
+├── README.md
+├── Dockerfile            # Definizione immagine Docker per l'ambiente del progetto
+├── scripts/              # con gli step principali della pipeline
+│   ├── pipeline/           # script
+│   ├── templates/          # template di script parametrizzabili 
+│   └── utils/              # sed
+├── config/               # per i file YAML o SH di configurazione
+│   └── config.yml
+├── data/                 # per organizzare input/output.
+│   ├── raw/                # per i dati originali (es. FASTQ, metadati)
+│   ├── processed/          # per output intermedi o finali
+│   └── tmp/                # per file temporanei
+├── docs/                 # immagini, schemi, diagrammi della pipeline.
+└── examples/             # per testare singoli step con dati minimi
+
+
+# metacheese Docker Container
+Ambiente Docker personalizzato per analisi bioinformatiche con strumenti legacy e moderni mantenuti separati.
+
+## Contenuto
+Docker container costruito su Ubuntu 18.04 con i seguenti tool e ambienti:
+- Miniconda con ambienti isolati::
+  - `bioenv`: contiene AdapterRemoval, MetaPhlAn, CheckM, Samtools, SPAdes, MetaBAT2
+  - `bowtieenv`: contiene Bowtie2 (Python 2.7, Perl 5.22)
+- R + pacchetto `optparse`
+- Il container monta automaticamente le directory `scripts/`, `data/`, `config/`, `examples/`
+
+## Costruzione e utilizzo
+Da terminale:
+
+```bash
+# Build dell'immagine
+docker build -t metacheese .
+
+# Esecuzione interattiva
+docker run -it metacheese
+
+# All'interno del container
+cd /data
+. activate_tool.sh
+conda info --envs
+./check_tools.sh

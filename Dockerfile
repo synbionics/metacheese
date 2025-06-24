@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Pacchetti di sistema
+# Pacchetti di base
 RUN apt-get update && apt-get install -y \
     wget \
     curl \
@@ -22,45 +22,64 @@ RUN apt-get update && apt-get install -y \
     perl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Configura la localizzazione
+# Localizzazione
 RUN locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8  
 ENV LANGUAGE=en_US:en  
 ENV LC_ALL=en_US.UTF-8
 
-# Installa Miniconda
+# Miniconda
 ENV CONDA_DIR=/opt/conda
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
     bash /tmp/miniconda.sh -b -p $CONDA_DIR && \
     rm /tmp/miniconda.sh && \
     $CONDA_DIR/bin/conda clean -afy
+
 ENV PATH=$CONDA_DIR/bin:$PATH
 
-# Configura Conda
-RUN conda config --add channels defaults && \
+# Inizializzazione Conda e canali
+RUN conda init bash && \
+    conda config --add channels defaults && \
     conda config --add channels conda-forge && \
     conda config --add channels bioconda && \
     conda update -n base -c defaults conda
 
-# Crea due ambienti: uno per AdapterRemoval e uno per Bowtie2
-RUN conda create -y -n adapterenv python=3.8 adapterremoval=2.3.3 && \
-    conda create -y -n bowtieenv python=2.7 bowtie2=2.3.3.1
-    # metaphlan=3.0.14 \
-    # checkm-genome \
-    # samtools \
-    # spades=3.13.0 \
-    # metabat2
+# Ambiente base per la maggior parte degli strumenti bioinformatici
+RUN conda create -y -n bioenv python=3.8 && \
+    conda run -n bioenv conda install -y \
+        adapterremoval=2.3.3 \
+        metaphlan=3.0.14 \
+        checkm-genome \
+        samtools \
+        spades=3.13.0 \
+        metabat2
 
-# Installa pacchetto R utile
+
+# Ambiente separato solo per Bowtie2 (richiede Python 2.7 e Perl 5.22)
+RUN conda create -y -n bowtieenv python=2.7 bowtie2=2.3.3.1
+
+# R package utile
 RUN Rscript -e "install.packages('optparse', repos='http://cran.rstudio.com/')"
 
-# Copia cartelle nel container
+# Copia file nel container
 COPY scripts /data/scripts
-COPY template /data/template
-COPY input /data/input
-COPY output /data/output
 COPY config /data/config
+COPY data/raw /data/raw
+COPY data/processed /data/processed
+COPY data/tmp /data/tmp
+COPY docs /data/docs
+COPY examples /data/examples
 
+
+# Script per attivare l'ambiente Conda
+COPY activate_tool.sh /data/activate_tool.sh
+# Script per controllare gli strumenti installati
+COPY check_tools.sh /data/check_tools.sh
+RUN chmod +x /data/activate_tool.sh /data/check_tools.sh
+
+
+# Working dir
 WORKDIR /data
 
 CMD ["/bin/bash"]
+
