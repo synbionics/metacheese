@@ -44,6 +44,12 @@ RUN conda init bash && \
     conda config --add channels bioconda && \
     conda update -n base -c defaults conda
 
+# installa la Go-yq di mikefarah
+RUN wget -qO /usr/local/bin/yq \
+     https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64 && \
+    chmod +x /usr/local/bin/yq
+
+
 # Ambiente base per la maggior parte degli strumenti bioinformatici
 RUN conda create -y -n bioenv python=3.8 && \
     conda run -n bioenv conda install -y \

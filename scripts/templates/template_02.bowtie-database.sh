@@ -1,7 +1,14 @@
-module load bowtie2/2.3.3.1
+#!/bin/bash
 
-#/hpc/home/luca.bettera/Downloads/ncbi_dataset/data/GCA_002263795.4/GCA_002263795.4_ARS-UCD2.0_genomic.fna  Bos_taurus
-reference_genome= "@02-var1@"
-bowtie2-build $reference_genome
+# Attiva l'ambiente Conda in cui è installato Bowtie2
+source /opt/conda/etc/profile.d/conda.sh
+conda activate bowtieenv
 
-deactivate
+# Definisci il percorso al genoma di riferimento (senza estensione per output index)
+reference_genome="@02-var1@"
+
+# Costruisce l'indice di Bowtie2
+bowtie2-build "$reference_genome" "$reference_genome"
+
+# Disattiva l'ambiente Conda alla fine
+conda deactivate

@@ -1,5 +1,5 @@
 # metacheese
-metacheese è una pipeline modulare per l’elaborazione di dati metagenomici, confezionata in un contenitore Docker che integra strumenti bioinformatici legacy e moderni in ambienti isolati per massima compatibilità e replicabilità.
+metacheese è una pipeline modulare per l’elaborazione di dati metagenomici, confezionata in un contenitore Docker che integra strumenti bioinformatici moderni in ambienti isolati per massima compatibilità e replicabilità.
 
 metacheese/
 ├── README.md
@@ -19,7 +19,7 @@ metacheese/
 
 
 # metacheese Docker Container
-Ambiente Docker personalizzato per analisi bioinformatiche con strumenti legacy e moderni mantenuti separati.
+Ambiente Docker personalizzato per analisi bioinformatiche con strumenti moderni mantenuti separati.
 
 ## Contenuto
 Docker container costruito su Ubuntu 18.04 con i seguenti tool e ambienti:
@@ -37,6 +37,8 @@ Da terminale:
 docker build -t metacheese .
 
 # Esecuzione interattiva
+docker run -it --rm -v $PWD:/data metacheese /bin/bash
+docker run -it --rm -v C:\Users\Dorin\Documents\GitHub\metacheese:/data metacheese /bin/bash
 docker run -it metacheese
 
 # All'interno del container
@@ -44,3 +46,6 @@ cd /data
 . activate_tool.sh
 conda info --envs
 ./check_tools.sh
+bash xxx.sh
+conda activate bioenv
+

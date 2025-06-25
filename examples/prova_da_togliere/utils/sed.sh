@@ -3,7 +3,7 @@
 CONFIG=Config.yml
 
 # sed 01
-cp template_00-01.extract_and_adapter.sh 00-01.extract_and_adapter.sh
+cp ../templates/template_00-01.extract_and_adapter.sh 00-01.extract_and_adapter.sh
 for var in {1..5}; do
     value=$(yq ".step00_01.dir${var}" "$CONFIG")
     sed -i "s|@00-01_var${var}@|$value|g" 00-01.extract_and_adapter.sh
@@ -19,14 +19,14 @@ reference_genome=$(yq '.step02.reference_genome' "$CONFIG")
 sed "s|@02-reference_genome@|$reference_genome|g" template_02.bowtie-database.sh > 02.bowtie-database.sh
 
 # sed 03
-cp template_03.botwie-remove_host.sh 03.bowtie-remove_host.sh
+cp ../templates/template_03.botwie-remove_host.sh 03.bowtie-remove_host.sh
 for var in {1..3}; do
     value=$(yq ".step03.dir${var}" "$CONFIG")
     sed -i "s|@03_dir${var}@|$value|g" 03.bowtie-remove_host.sh
 done
 
 # sed 04
-cp template_04.metaphlan.sh 04.metaphlan.sh
+cp ../templates/template_04.metaphlan.sh 04.metaphlan.sh
 for var in {1..3}; do
     value=$(yq ".step04.dir${var}" "$CONFIG")
     sed -i "s|@04_dir${var}@|$value|g" 04.metaphlan.sh
