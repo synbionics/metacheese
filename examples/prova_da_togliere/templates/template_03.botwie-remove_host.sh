@@ -36,4 +36,3 @@ for file_L1 in "$sample_directory"/*cleaned_L1.fq.gz; do
     fi
 done
 
-# Cosa fa questa riga? Questa riga elimina il file di output in formato SAM generato da Bowtie2. Il file SAM è un formato di allineamento dettagliato, ma può occupare molto spazio, soprattutto con grandi dataset.
