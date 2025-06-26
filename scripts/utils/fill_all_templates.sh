@@ -65,6 +65,60 @@ STEPS["step06"]="\
 "
 SEPS["step06"]="_"
 
+# step07
+STEPS["step07"]="\
+  template_07.bowtie2_index.sh \
+  scripts/pipeline/07.bowtie2_index.sh \
+  07 \
+  var1=dir1 var2=dir2 par1=par1\
+"
+SEPS["step07"]="_"
+
+# step08_09
+STEPS["step08_09"]="\
+  template_08-09.mapp_coverage.sh \
+  scripts/pipeline/08-09.mapp_coverage.sh \
+  08-09 \
+  var1=dir1 var2=dir2 var3=dir3\
+"
+SEPS["step08_09"]="_"
+
+# step10_11
+STEPS["step10_11"]="\
+  template_10-11-11b.metabat.sh \
+  scripts/pipeline/10-11.metabat.sh \
+  10-11 \
+  var1=dir1 var2=dir2 var3=dir3 var4=dir4 var5=dir5 par1=par1 par2=par2\
+"
+SEPS["step10_11"]="_"
+
+# step12_13
+STEPS["step12_13"]="\
+  template_12-13_checkm.sh \
+  scripts/pipeline/12-13.checkm.sh \
+  12-13 \
+  var1=var1 var2=var2 var3=var3 par1=par1 par2=par2 par3=par3\
+"
+SEPS["step12_13"]="_"
+
+# step14
+STEPS["step14"]="\
+  template_14_filter-metadata.sh \
+  scripts/pipeline/14.filter_metadata.sh \
+  14 \
+  var1=var1 var2=var2 var3=var3 var4=var4 \
+  var5=var5 var6=var6 var7=var7 var8=var8\
+"
+SEPS["step14"]="_"
+
+# step15
+STEPS["step15"]="\
+  template_15.tormes_MAG.sh \
+  scripts/pipeline/15.tormes_MAG.sh \
+  15 \
+  var1=var1 var2=var2 par1=par1 par2=par2\
+"
+SEPS["step15"]="_"
 
 # 3) Generazione
 for STEP_KEY in "${!STEPS[@]}"; do

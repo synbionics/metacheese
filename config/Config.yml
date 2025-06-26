@@ -39,43 +39,48 @@ step06:
 
 
 step07:
-  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/06_Bowtie_Index" # directory di output
-  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs/filtered" # directory di input
-  par1: 32
+  dir1: "data/processed/07_Bowtie_Index"                     # cartella output
+  dir2: "data/processed/06_spades_output/contigs/filtered"   # cartella con contigs .fasta
+  par1: 32                                                   # threads
+
 
 step08_09:
-  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" # directory di fastq
-  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/06_Bowtie_Index" # directory di index
-  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/07_Bowtie_map" # directory di output
+  dir1: "data/processed/03_bowtie2_output"          # input file fastq
+  dir2: "data/processed/07_Bowtie_Index"            # input indici Bowtie2
+  dir3: "data/processed/08_mapping_coverage"        # output BAM + log
 
 step10_11:
-  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/07_Bowtie_map" # directory di input
-  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/08_metabat_depth" # directory di output depth
-  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs/filtered" # directory di input contig
-  dir4: "/hpc/group/G_MICRO/DOPnonDOP_noema/09_metabat_MAG" # directory di output metabat
-  dir5: "/hpc/group/G_MICRO/DOPnonDOP_noema/09b_metabat_MAG" # directory di output metabat 11b
-  par1: 1500   # lunghezza minima contig
-  par2: 32     # threads
+  dir1: "data/processed/08_mapping_coverage"                    # 
+  dir2: "data/processed/09_metabat_depth"                       # 
+  dir3: "data/processed/06_spades_output/contigs/filtered"      # 
+  dir4: "data/processed/09_metabat_MAG"                         # 
+  dir5: "data/processed/09b_metabat_MAG"                        # 
+  par1: 1500    # → min contig length per binning
+  par2: 32      # → numero di thread
+
 
 step12_13:
-  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/09_metabat_MAG" # directory di input
-  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/10_checkm" # directory di output checkm
-  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/10_checkm2" # directory di output checkm2
-  par1: 32     # threads checkm
-  par2: 32     # threads pplacer
-  par3: 30     # threads checkm2
+  var1: "data/processed/09_metabat_MAG"        # input MAGs .fa
+  var2: "data/processed/12_checkm"             # output checkm
+  var3: "data/processed/13_checkm2"            # output checkm2
+  par1: 32    # thread per checkm
+  par2: 16    # thread per pplacer
+  par3: 32    # thread per checkm2
+
 
 step14:
-  var1: "/percorso/al/quality_report.tsv"
-  var2: "/percorso/ai_MAGs_originali"
-  var3: "/percorso/ai_MAGs_filtrati"
-  var4: "/percorso/a_tutti_i_MAGs"
-  var5: 50
-  var6: 10
-  var7: "my-metadata2.txt"
-  var8: "my-metadata_thermophilus.txt"
+  var1: "data/processed/12_checkm/output_checkm.txt"            # TSV_FILE
+  var2: "data/processed/09_metabat_MAG"                         # SOURCE_DIR (MAGs da filtrare)
+  var3: "data/processed/14_MAGs_high_quality"                   # TARGET_DIR (output MAGs filtrati)
+  var4: "data/processed/09_metabat_MAG"                         # ALL_MAGS_DIR (per metadati completi)
+  var5: 50                                                      # COMPLETENESS
+  var6: 10                                                      # CONTAMINATION
+  var7: "filtered_metadata.tsv"                                 # METADATA_FILTERED
+  var8: "all_metadata.tsv"                                      # METADATA_ALL
+
 
 step15:
-  var1: "/hpc/group/G_MICRO/DOPnonDOP_noema/11b_filtered_MAG_thermophilus/my-metadata_thermophilus.txt" # directory di input
-  par1: "s12b_tormes_thermophilus/" # directory di output
-  par2: 32 # threads
+  var1: "/hpc/group/DOPnonDOP_noema/"                                 # working dir → parametrica!
+  var2: "data/processed/14_MAGs_high_quality/filtered_metadata.tsv"   # metadati input
+  par1: "data/processed/15_tormes_MAGs"                               # output
+  par2: 16                                                            # thread
