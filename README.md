@@ -3,19 +3,34 @@ metacheese è una pipeline modulare per l’elaborazione di dati metagenomici, c
 
 metacheese/
 ├── README.md
-├── Dockerfile            # Definizione immagine Docker per l'ambiente del progetto
-├── scripts/              # con gli step principali della pipeline
-│   ├── pipeline/           # script
-│   ├── templates/          # template di script parametrizzabili 
-│   └── utils/              # sed
-├── config/               # per i file YAML o SH di configurazione
+├── Dockerfile                      # Definizione immagine Docker per l'ambiente del progetto
+├───config                          # per i file YAML o SH di configurazione
 │   └── config.yml
-├── data/                 # per organizzare input/output.
-│   ├── raw/                # per i dati originali (es. FASTQ, metadati)
-│   ├── processed/          # per output intermedi o finali
-│   └── tmp/                # per file temporanei
-├── docs/                 # immagini, schemi, diagrammi della pipeline.
-└── examples/             # per testare singoli step con dati minimi
+├───data                            # per organizzare input/output ( da migliorare)
+│   ├───input                         # per i dati originali (es. FASTQ, metadati)
+│   │   ├───database_metaphlan
+│   │   ├───gene
+│   │   │   └───Bos_taurus
+│   │   └───rawdata
+│   ├───processed                     # per output intermedi o finali
+│   │   ├───02_Bowtie2_output
+│   │   └───04_metaphlan_output
+│   └───tmp                           # per file temporanei
+│       └───stept00_01
+│           ├───AdpRem
+│           └───rawData
+├───docs                            # immagini, schemi, diagrammi della pipeline.
+├───examples                        # per testare singoli step con dati minimi
+│   └───prova_da_togliere
+│       ├───config
+│       ├───pipeline
+│       ├───templates
+│       └───utils
+└───scripts                         # con gli step principali della pipeline
+    ├───pipeline                      # script da eseguire
+    ├───templates                     # template di script parametrizzabili 
+    └───utils                         # sed/riempimento e altro
+
 
 
 # metacheese Docker Container
