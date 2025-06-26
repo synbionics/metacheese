@@ -1,9 +1,9 @@
 step00_01:
-  dir1: "/hpc/archive/G_MICRO/rawdata/"         # comando cd per dove sono i campioni .tar
-  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/rawdata" # directory di output estrazione
-  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/01_AdpRem_output" # directory di output AdapterRemoval
-  dir4: "/hpc/archive/G_MICRO/rawdata/X204SC24020161-Z01-F003_01.tar" # file tar 01
-  dir5: "/hpc/archive/G_MICRO/rawdata/X204SC24020161-Z01-F003_02.tar" # file tar 02
+  dir1: "/data/input/rawdata"         # comando cd per dove sono i campioni .tar 
+  dir2: "/data/tmp/step00_01" # directory di output estrazione
+  dir3: "/data/tmp/step00_01/AdpRem" # directory di output AdapterRemoval
+  dir4: "/data/tmp/step00_01/rawdata/X204SC24020161-Z01-F003_01.tar" # file tar 01
+  dir5: "/data/tmp/step00_01/rawdata/X204SC24020161-Z01-F003_02.tar" # file tar 02
   par1: 80    # threads
   par2: 50    # lunghezza minima
   par3: 30    # qualità minima
