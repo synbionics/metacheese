@@ -16,26 +16,27 @@ step02:
 
 step03:
   dir1: "../../data/tmp/stept00_01/AdpRem" # directory di input
-  dir2: "../../data/processed/03_Bowtie2_output" # directory di output
+  dir2: "../../data/processed/03_bowtie2_output" # directory di output
   dir3: "../../data/input/gene/Bos_taurus/Bos_taurus" # database
 
 step04:
-  dir1: "$GROUP/common/metaphlan_databases" # directory di database
-  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" # directory dwi campioni
-  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/03_metaphlan_output" # directory di output
-  rscript: "/opt/micromamba/envs/metaphlan/lib/python3.12/site-packages/metaphlan/utils/calculate_diversity.R" # script R
+  dir1: "../../data/input/database_metaphlan"            # Metaphlan DB
+  dir2: "../../data/processed/03_bowtie2_output"         # cartella input fastq
+  dir3: "../../data/processed/04_metaphlan_output"       # output metaphlan
+  rscript: "/opt/micromamba/envs/metaphlan/lib/python3.12/site-packages/metaphlan/utils/calculate_diversity.R"  # → @04_Rscript@
 
 step05:
-  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/temporanea" # mkdir
-  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" # directory dei campioni
+  var1: "../../data/processed/05_spades_output/temporanea"
+  var2: "../../data/processed/03_Bowtie2_output"
+  par1: 32       # threads
+  par2: 64       # memoria in GB
 
 step06:
-  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/" # cd
-  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs" # mkdir e secondo cd
-  dir3: "/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs/filtered" # secondo mkdir
-  filter1: 32    # filtro parallel
-  filter2: 500   # filtro lunghezza minima
-  filter3: "filtered" # filtro dir output
+  var1: "data/processed/05_spades_output"
+  var2: "data/processed/06_spades_output/contigs"
+  var3: "data/processed/06_spades_output/contigs/filtered"
+  filter1: 32    # num thread per xargs
+
 
 step07:
   dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/06_Bowtie_Index" # directory di output

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Inizializza Conda e attiva ambiente bioenv (assumiamo che AdapterRemoval sia lì)
+# Inizializza Conda e attiva ambiente bioenv
 source /opt/conda/etc/profile.d/conda.sh
 conda activate bioenv
 

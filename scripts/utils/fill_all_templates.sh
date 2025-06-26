@@ -38,6 +38,34 @@ STEPS["step03"]="\
 "
 SEPS["step03"]="_"
 
+# step04
+STEPS["step04"]="\
+  template_04.metaphlan.sh \
+  scripts/pipeline/04.metaphlan.sh \
+  04 \
+  var1=dir1 var2=dir2 var3=dir3 Rscript=rscript\
+"
+SEPS["step04"]="_"
+
+# step05
+STEPS["step05"]="\
+  template_05.spades.sh \
+  scripts/pipeline/05.spades.sh \
+  05 \
+  var1=var1 var2=var2 par1=par1 par2=par2\
+"
+SEPS["step05"]="_"
+
+# step06
+STEPS["step06"]="\
+  template_06.contig_filter.sh \
+  scripts/pipeline/06.contig_filter.sh \
+  06 \
+  var1=var1 var2=var2 var3=var3 filter1=filter1\
+"
+SEPS["step06"]="_"
+
+
 # 3) Generazione
 for STEP_KEY in "${!STEPS[@]}"; do
   read -r -a arr <<< "${STEPS[$STEP_KEY]}"

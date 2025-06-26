@@ -9,7 +9,7 @@ conda activate bowtieenv
 sample_directory="../../data/tmp/stept00_01/AdpRem"
 
 # Directory di output per i risultati di mapping
-output_dir="../../data/processed/02_Bowtie2_output"
+output_dir="../../data/processed/03_bowtie2_output"
 mkdir -p "$output_dir"
 
 # Prefisso del database Bowtie2 (senza estensione .bt2)
