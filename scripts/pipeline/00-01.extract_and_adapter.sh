@@ -5,15 +5,15 @@ source /opt/conda/etc/profile.d/conda.sh
 conda activate bioenv
 
 # Step 1: Estrazione dei file .fq.gz dagli archivi .tar
-cd /hpc/archive/G_MICRO/rawdata/  # Directory con i file .tar
-output_dir00="/hpc/group/G_MICRO/DOPnonDOP_noema/rawdata"  # Dove salvare i .fq.gz
-output_dir01="/hpc/group/G_MICRO/DOPnonDOP_noema/01_AdpRem_output"  # Dove mettere gli output di AdapterRemoval
+cd /data/input/rawdata  # Directory con i file .tar
+output_dir00="/data/tmp/step00_01"  # Dove salvare i .fq.gz
+output_dir01="/data/tmp/step00_01/AdpRem"  # Dove mettere gli output di AdapterRemoval
 
 mkdir -p "$output_dir00" "$output_dir01"
 
 echo "Estrazione dei file .fq.gz dagli archivi .tar..."
-for tar_file in /hpc/archive/G_MICRO/rawdata/X204SC24020161-Z01-F003_01.tar \
-                /hpc/archive/G_MICRO/rawdata/X204SC24020161-Z01-F003_02.tar; do
+for tar_file in /data/tmp/step00_01/rawdata/X204SC24020161-Z01-F003_01.tar \
+                /data/tmp/step00_01/rawdata/X204SC24020161-Z01-F003_02.tar; do
     tar -tf "$tar_file" | grep -E '^D?_?PR_[0-9]+|^ND_[0-9]+.*\.fq\.gz$' | while read -r filepath; do
         filename=$(basename "$filepath")
         tar -xf "$tar_file" -C "$output_dir00" --strip-components=$(echo "$filepath" | tr -cd '/' | wc -c) "$filepath"

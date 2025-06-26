@@ -15,9 +15,9 @@ step02:
   reference_genome: "/hpc/home/luca.bettera/Downloads/ncbi_dataset/data/GCA_002263795.4/GCA_002263795.4_ARS-UCD2.0_genomic.fna Bos_taurus"
 
 step03:
-  dir1: "/hpc/group/G_MICRO/DOPnonDOP_noema/01_AdpRem_output" # directory di input
-  dir2: "/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output" # directory di output
-  dir3: "/hpc/group/G_MICRO/Metagenomica-database/Bos_taurus/Bos_taurus.bt2" # database
+  dir1: "../../data/tmp/stept00_01/AdpRem" # directory di input
+  dir2: "../../data/processed/03_Bowtie2_output" # directory di output
+  dir3: "../../data/input/gene/Bos_taurus/Bos_taurus" # database
 
 step04:
   dir1: "$GROUP/common/metaphlan_databases" # directory di database

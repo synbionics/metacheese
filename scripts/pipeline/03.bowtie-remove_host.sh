@@ -6,14 +6,14 @@ source /opt/conda/etc/profile.d/conda.sh
 conda activate bowtieenv
 
 # Directory dove sono i .fq.gz puliti da AdapterRemoval
-sample_directory="/hpc/group/G_MICRO/DOPnonDOP_noema/01_AdpRem_output"
+sample_directory="../../data/tmp/stept00_01/AdpRem"
 
 # Directory di output per i risultati di mapping
-output_dir="/hpc/group/G_MICRO/DOPnonDOP_noema/02_Bowtie2_output"
+output_dir="../../data/processed/02_Bowtie2_output"
 mkdir -p "$output_dir"
 
 # Prefisso del database Bowtie2 (senza estensione .bt2)
-meta_database="/hpc/group/G_MICRO/Metagenomica-database/Bos_taurus/Bos_taurus.bt2"
+meta_database="../../data/input/gene/Bos_taurus/Bos_taurus"
 
 echo "[$(date)] Mapping in: $sample_directory  →  $output_dir  su DB: $meta_database"
 

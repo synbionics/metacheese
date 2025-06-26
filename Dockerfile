@@ -70,7 +70,7 @@ RUN Rscript -e "install.packages('optparse', repos='http://cran.rstudio.com/')"
 # Copia file nel container
 COPY scripts /data/scripts
 COPY config /data/config
-COPY data/raw /data/raw
+COPY data/input /data/input
 COPY data/processed /data/processed
 COPY data/tmp /data/tmp
 COPY docs /data/docs
