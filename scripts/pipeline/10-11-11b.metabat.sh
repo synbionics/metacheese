@@ -7,11 +7,11 @@ module load metabat
 test -n "$METABAT_CONTAINER" || { echo "METABAT_CONTAINER non definito"; exit 1; }
 
 # Directory
-bam_dir="../../data/processed/08_mapping_coverage"
-depth_dir="10-11_var2@"
-contig_dir="10-11_var3@"
-mag_dir_11="10-11_var4@"
-mag_dir_11b="10-11_var5@"
+bam_dir="/hpc/group/G_MICRO/DOPnonDOP_noema/07_Bowtie_map"
+depth_dir="/hpc/group/G_MICRO/DOPnonDOP_noema/08_metabat_depth"
+contig_dir="/hpc/group/G_MICRO/DOPnonDOP_noema/04_spades_output/contigs/filtered"
+mag_dir_11="/hpc/group/G_MICRO/DOPnonDOP_noema/09_metabat_MAG"
+mag_dir_11b="/hpc/group/G_MICRO/DOPnonDOP_noema/09b_metabat_MAG"
 mkdir -p "$depth_dir" "$mag_dir_11" "$mag_dir_11b"
 
 # 1. Calcolo delle depth (step 10)

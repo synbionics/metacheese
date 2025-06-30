@@ -5,15 +5,13 @@ services:
     image: bio-tools
     container_name: bio-tools-container
     volumes:
-      - ./scripts:/data/scripts
-      - ./config:/data/config
-      - ./data/raw:/data/raw
-      - ./data/processed:/data/processed
-      - ./data/tmp:/data/tmp
-      - ./docs:/data/docs
-      - ./examples:/data/examples
+      - ./scripts:/main/scripts
+      - ./config:/main/config
+      - ./data:/main/data
+      - ./docs:/main/docs
+      - ./examples:/main/examples
     tty: true
     stdin_open: true
     command: bash
 
-#per eseguire il container: docker exec -it bio-tools-container bash 
+#per eseguire il container: docker exec -it bio-tools-container bash

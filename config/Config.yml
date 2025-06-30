@@ -1,9 +1,9 @@
 step00_01:
-  dir1: "/data/input/rawdata"         # comando cd per dove sono i campioni .tar 
-  dir2: "/data/tmp/step00_01" # directory di output estrazione
-  dir3: "/data/tmp/step00_01/AdpRem" # directory di output AdapterRemoval
-  dir4: "/data/tmp/step00_01/rawdata/X204SC24020161-Z01-F003_01.tar" # file tar 01
-  dir5: "/data/tmp/step00_01/rawdata/X204SC24020161-Z01-F003_02.tar" # file tar 02
+  dir1: "../../data/input/rawdata"         # comando cd per dove sono i campioni .tar 
+  dir2: "../../data/tmp/01_AdapterRemoval" # directory di output estrazione
+  dir3: "../../data/tmp/01_AdapterRemoval" # directory di output AdapterRemoval
+  dir4: "../../data/tmp/step00_01/rawdata/X204SC24020161-Z01-F003_01.tar" # file tar 01
+  dir5: "../../data/tmp/step00_01/rawdata/X204SC24020161-Z01-F003_02.tar" # file tar 02
   par1: 80    # threads
   par2: 50    # lunghezza minima
   par3: 30    # qualità minima
@@ -15,64 +15,63 @@ step02:
   reference_genome: "/hpc/home/luca.bettera/Downloads/ncbi_dataset/data/GCA_002263795.4/GCA_002263795.4_ARS-UCD2.0_genomic.fna Bos_taurus"
 
 step03:
-  dir1: "../../data/tmp/stept00_01/AdpRem" # directory di input
+  dir1: "../../data/processed/01_AdapterRemoval" # directory di input
   dir2: "../../data/processed/03_bowtie2_output" # directory di output
-  dir3: "../../data/input/gene/Bos_taurus/Bos_taurus" # database
+  dir3: "../../data/input/gene/Bos_taurus/Bos_taurus.bt2" # database
 
 step04:
   dir1: "../../data/input/database_metaphlan"            # Metaphlan DB
   dir2: "../../data/processed/03_bowtie2_output"         # cartella input fastq
   dir3: "../../data/processed/04_metaphlan_output"       # output metaphlan
-  rscript: "/opt/micromamba/envs/metaphlan/lib/python3.12/site-packages/metaphlan/utils/calculate_diversity.R"  # → @04_Rscript@
+  rscript: "../../data/input/calculate_diversity.R"  # → @04_Rscript@
 
 step05:
-  var1: "../../data/processed/05_spades_output/temporanea"
-  var2: "../../data/processed/03_Bowtie2_output"
+  var1: "../../data/processed/03_Bowtie2_output" #directory di input
+  var2: "../../data/processed/05_spades_output/temporanea" # directory di output
+   
   par1: 32       # threads
   par2: 64       # memoria in GB
 
 step06:
-  var1: "data/processed/05_spades_output"
-  var2: "data/processed/06_spades_output/contigs"
-  var3: "data/processed/06_spades_output/contigs/filtered"
+  var1: "../../data/processed/05_spades_output"
   filter1: 32    # num thread per xargs
 
 
 step07:
-  dir1: "data/processed/07_Bowtie_Index"                     # cartella output
-  dir2: "data/processed/06_spades_output/contigs/filtered"   # cartella con contigs .fasta
+  dir1: "../../data/processed/07_Bowtie_Index"                     # cartella output
+  dir2: "../../data/processed/05_spades_output/contigs/filtered"   # cartella con contigs .fasta
   par1: 32                                                   # threads
 
 
 step08_09:
-  dir1: "data/processed/03_bowtie2_output"          # input file fastq
-  dir2: "data/processed/07_Bowtie_Index"            # input indici Bowtie2
-  dir3: "data/processed/08_mapping_coverage"        # output BAM + log
+  dir1: "../../data/processed/03_bowtie2_output"          # input file fastq
+  dir2: "../../data/processed/07_Bowtie_Index"            # input indici Bowtie2
+  dir3: "../../data/processed/08_mapping_coverage"        # output BAM + log
 
 step10_11:
-  dir1: "data/processed/08_mapping_coverage"                    # 
-  dir2: "data/processed/09_metabat_depth"                       # 
-  dir3: "data/processed/06_spades_output/contigs/filtered"      # 
-  dir4: "data/processed/09_metabat_MAG"                         # 
-  dir5: "data/processed/09b_metabat_MAG"                        # 
+  dir1: "../../data/processed/08_mapping_coverage"                    # output 08-09
+  dir2: "../../data/processed/10_metabat_depth"                       # output 10
+  dir3: "../../data/processed/05_spades_output/contigs/filtered"      # output 05
+  dir4: "../../data/processed/11_metabat_MAG"                         # output 11
+  dir5: "../../data/processed/11b_metabat_MAG"                        # output 11b
   par1: 1500    # → min contig length per binning
   par2: 32      # → numero di thread
 
 
 step12_13:
-  var1: "data/processed/09_metabat_MAG"        # input MAGs .fa
-  var2: "data/processed/12_checkm"             # output checkm
-  var3: "data/processed/13_checkm2"            # output checkm2
+  var1: "../../data/processed/09_metabat_MAG"        # input MAGs .fa
+  var2: "../../data/processed/12_checkm"             # output checkm
+  var3: "../../data/processed/13_checkm2"            # output checkm2
   par1: 32    # thread per checkm
   par2: 16    # thread per pplacer
   par3: 32    # thread per checkm2
 
 
 step14:
-  var1: "data/processed/12_checkm/output_checkm.txt"            # TSV_FILE
-  var2: "data/processed/09_metabat_MAG"                         # SOURCE_DIR (MAGs da filtrare)
-  var3: "data/processed/14_MAGs_high_quality"                   # TARGET_DIR (output MAGs filtrati)
-  var4: "data/processed/09_metabat_MAG"                         # ALL_MAGS_DIR (per metadati completi)
+  var1: "../../data/processed/12_checkm/output_checkm.txt"            # TSV_FILE
+  var2: "../../data/processed/11_metabat_MAG"                         # SOURCE_DIR (MAGs da filtrare)
+  var3: "../../data/processed/14_MAGs_high_quality"                   # TARGET_DIR (output MAGs filtrati)
+  var4: "../../data/processed/09_metabat_MAG"                         # ALL_MAGS_DIR (per metadati completi)
   var5: 50                                                      # COMPLETENESS
   var6: 10                                                      # CONTAMINATION
   var7: "filtered_metadata.tsv"                                 # METADATA_FILTERED
@@ -81,6 +80,6 @@ step14:
 
 step15:
   var1: "/hpc/group/DOPnonDOP_noema/"                                 # working dir → parametrica!
-  var2: "data/processed/14_MAGs_high_quality/filtered_metadata.tsv"   # metadati input
-  par1: "data/processed/15_tormes_MAGs"                               # output
+  var2: "../../data/processed/14_MAGs_high_quality/filtered_metadata.tsv"   # metadati input
+  par1: "../../data/processed/15_tormes_MAGs"                               # output
   par2: 16                                                            # thread

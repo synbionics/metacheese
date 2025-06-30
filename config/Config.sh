@@ -7,7 +7,7 @@ step00_01_dir5="/hpc/archive/G_MICRO/rawdata/X204SC24020161-Z01-F003_02.tar" # f
 
 step00_01_par1=80 # threads
 step00_01_par2=50 # lunghezza minima
-step00_01_par3=30 # qualità minima
+step00_01_par3=30 # qualità minimaq
 step00_01_par4=10 # max ns
 step00_01_par5=2 # trim5p
 step00_01_par6=2 # trim3p

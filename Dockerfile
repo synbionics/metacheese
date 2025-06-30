@@ -60,32 +60,29 @@ RUN conda create -y -n bioenv python=3.8 && \
         spades=3.13.0 \
         metabat2
 
-
 # Ambiente separato solo per Bowtie2 (richiede Python 2.7 e Perl 5.22)
-RUN conda create -y -n bowtieenv python=2.7 bowtie2=2.3.3.1
+RUN conda create -y -n bowtieenv python=2.7 bowtie2=2.3.3.1 samtools
 
 # R package utile
 RUN Rscript -e "install.packages('optparse', repos='http://cran.rstudio.com/')"
 
-# Copia file nel container
-COPY scripts /data/scripts
-COPY config /data/config
-COPY data/input /data/input
-COPY data/processed /data/processed
-COPY data/tmp /data/tmp
-COPY docs /data/docs
-COPY examples /data/examples
+# ...existing code...
 
+# Copia file nel container
+COPY scripts /main/scripts
+COPY config /main/config
+COPY data /main/data
+COPY docs /main/docs
+COPY examples /main/examples
 
 # Script per attivare l'ambiente Conda
-COPY activate_tool.sh /data/activate_tool.sh
+COPY activate_tool.sh /main/activate_tool.sh
 # Script per controllare gli strumenti installati
-COPY check_tools.sh /data/check_tools.sh
-RUN chmod +x /data/activate_tool.sh /data/check_tools.sh
-
+COPY check_tools.sh /main/check_tools.sh
+RUN chmod +x /main/activate_tool.sh /main/check_tools.sh
 
 # Working dir
-WORKDIR /data
+WORKDIR /main
 
 CMD ["/bin/bash"]
-
+# ...existing code...

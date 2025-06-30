@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
 # 1) Percorsi base
@@ -49,8 +49,8 @@ SEPS["step04"]="_"
 
 # step05
 STEPS["step05"]="\
-  template_05.spades.sh \
-  scripts/pipeline/05.spades.sh \
+  template_05.spades.assembly.sh \
+  scripts/pipeline/05.spades.assembly.sh \
   05 \
   var1=var1 var2=var2 par1=par1 par2=par2\
 "
@@ -67,8 +67,8 @@ SEPS["step06"]="_"
 
 # step07
 STEPS["step07"]="\
-  template_07.bowtie2_index.sh \
-  scripts/pipeline/07.bowtie2_index.sh \
+  template_07.bowtie-MAG_database.sh \
+  scripts/pipeline/07.bowtie-MAG_database.sh \
   07 \
   var1=dir1 var2=dir2 par1=par1\
 "

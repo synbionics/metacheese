@@ -1,53 +1,54 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
 
-# --- Attiva ambiente con Bowtie2 + samtools ---
 source /opt/conda/etc/profile.d/conda.sh
 conda activate bowtieenv
 
-# --- Parametri ---
+# Define input and output directories
 FASTQ_DIR="@08-09_var1@"
 INDEX_DIR="@08-09_var2@"
 OUTPUT_DIR="@08-09_var3@"
 
+# Ensure output directory exists
 mkdir -p "$OUTPUT_DIR"
 
-# Lista dei file
-file_list=($FASTQ_DIR/*.fq.1.gz)
-target_file="${file_list[$((SLURM_ARRAY_TASK_ID - 1))]}"
+# Itera su tutti i file .fq.1.gz presenti
+for fq1 in "$FASTQ_DIR"/*.fq.1.gz; do
+    base_name=$(basename "$fq1")
+    file_name="${base_name%.fq.1.gz}"
+    fq2="$FASTQ_DIR/${file_name}.fq.2.gz"
 
-# Campione corrente
-base_name=$(basename -- "$target_file")
-sample="${base_name%.fq.1.gz}"
+    # Verifica che esista il file mate
+    if [[ ! -f "$fq2" ]]; then
+        echo "File mancante: $fq2"
+        continue
+    fi
 
-# Indice Bowtie2 associato
-index_base="${INDEX_DIR}/${sample}.fasta_sort_index_base"
+    echo "Processo campione: $file_name"
 
-# Output
-bam_file="${OUTPUT_DIR}/${sample}.bam"
-sorted_bam="${OUTPUT_DIR}/${sample}.sorted.bam"
-bam_index="${OUTPUT_DIR}/${sample}.sorted.bam.bai"
-idxstats_file="${OUTPUT_DIR}/${sample}.sorted.bam.idxstat"
+    # Path base dell'indice Bowtie
+    index_base="${INDEX_DIR}/${file_name}..fasta_sort_index_base"
 
-echo " Mapping ${sample} → ${index_base}"
+    # Output
+    bam_file="${OUTPUT_DIR}/${file_name}.bam"
+    sorted_bam="${OUTPUT_DIR}/${file_name}.sorted.bam"
+    bam_index="${OUTPUT_DIR}/${file_name}.sorted.bam.bai"
+    idxstats_file="${OUTPUT_DIR}/${file_name}.sorted.bam.idxstat"
 
-# Bowtie2 + conversione in BAM
-bowtie2 -x "$index_base" \
-        -1 "$FASTQ_DIR/${sample}.fq.1.gz" \
-        -2 "$FASTQ_DIR/${sample}.fq.2.gz" \
+    # Esegue Bowtie2
+    bowtie2 -x "$index_base" \
+        -1 "$fq1" -2 "$fq2" \
         -q --no-unal --very-sensitive-local \
-        -p 32 2> "${OUTPUT_DIR}/${sample}_bowtie2.log" | \
-    samtools view -bS -o "$bam_file" -
+        -p 4 2> "${OUTPUT_DIR}/${file_name}_bowtie2.log" | \
+        samtools view -bS -o "$bam_file" -
 
-# Ordinamento BAM
-samtools sort "$bam_file" -o "$sorted_bam"
-rm -f "$bam_file"
+    # Ordina BAM
+    samtools sort "$bam_file" -o "$sorted_bam"
 
-# Index e idxstats
-samtools index "$sorted_bam"
-samtools idxstats "$sorted_bam" > "$idxstats_file"
+    # Indicizza BAM
+    samtools index "$sorted_bam"
 
-echo " Completato: $sample"
+    # Statistiche
+    samtools idxstats "$sorted_bam" > "$idxstats_file"
+done
 
-# --- Disattiva Conda ---
 conda deactivate

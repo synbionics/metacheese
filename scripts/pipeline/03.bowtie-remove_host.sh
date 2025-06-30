@@ -6,7 +6,7 @@ source /opt/conda/etc/profile.d/conda.sh
 conda activate bowtieenv
 
 # Directory dove sono i .fq.gz puliti da AdapterRemoval
-sample_directory="../../data/tmp/stept00_01/AdpRem"
+sample_directory="../../data/processed/01_AdapterRemoval"
 
 # Directory di output per i risultati di mapping
 output_dir="../../data/processed/03_bowtie2_output"

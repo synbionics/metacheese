@@ -43,7 +43,7 @@ merge_metaphlan_tables.py "$output_folder"/*.txt > "$output_folder/merged_abunda
 # --- Analisi di diversità alpha ---
 for metric in richness shannon simpson gini; do
     echo " Calcolo alpha diversity ($metric)..."
-    Rscript /opt/micromamba/envs/metaphlan/lib/python3.12/site-packages/metaphlan/utils/calculate_diversity.R \
+    Rscript ../../data/input/calculate_diversity.R \
         -f "$output_folder/merged_abundance_table.txt" \
         -d alpha \
         -m "$metric"
@@ -52,7 +52,7 @@ done
 # --- Analisi di diversità beta ---
 for metric in bray-curtis jaccard weighted-unifrac unweighted-unifrac clr aitchison; do
     echo " Calcolo beta diversity ($metric)..."
-    Rscript /opt/micromamba/envs/metaphlan/lib/python3.12/site-packages/metaphlan/utils/calculate_diversity.R \
+    Rscript ../../data/input/calculate_diversity.R \
         -f "$output_folder/merged_abundance_table.txt" \
         -d beta \
         -m "$metric"
