@@ -6,16 +6,16 @@ conda activate bowtieenv
 # Define input and output directories
 FASTQ_DIR="../../data/processed/03_bowtie2_output"
 INDEX_DIR="../../data/processed/07_Bowtie_Index"
-OUTPUT_DIR="../../data/processed/08_mapping_coverage"
+OUTPUT_DIR="../../data/processed/08-09_mapping_coverage"
 
 # Ensure output directory exists
 mkdir -p "$OUTPUT_DIR"
 
 # Itera su tutti i file .fq.1.gz presenti
-for fq1 in "$FASTQ_DIR"/*.fq.1.gz; do
+for fq1 in "$FASTQ_DIR"/*.1.fq.gz; do
     base_name=$(basename "$fq1")
-    file_name="${base_name%.fq.1.gz}"
-    fq2="$FASTQ_DIR/${file_name}.fq.2.gz"
+    file_name="${base_name%.1.fq.gz}"
+    fq2="$FASTQ_DIR/${file_name}.2.fq.gz"
 
     # Verifica che esista il file mate
     if [[ ! -f "$fq2" ]]; then
@@ -26,7 +26,7 @@ for fq1 in "$FASTQ_DIR"/*.fq.1.gz; do
     echo "Processo campione: $file_name"
 
     # Path base dell'indice Bowtie
-    index_base="${INDEX_DIR}/${file_name}..fasta_sort_index_base"
+    index_base="${INDEX_DIR}/${file_name}.fasta_sort_index_base"
 
     # Output
     bam_file="${OUTPUT_DIR}/${file_name}.bam"

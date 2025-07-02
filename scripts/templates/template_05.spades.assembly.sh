@@ -9,15 +9,15 @@ shopt -s nullglob
 
 # Directory di input/output (relative al file)
 campioni_folder="@05_var1@"
-output_folder="05_var2@"
+output_folder="@05_var2@"
 
 # Crea cartella di output se non esiste
 mkdir -p "$output_folder"
 
-# Ciclo su tutti i file .fq.1.gz presenti
-for fq1 in "$campioni_folder"/*.fq.1.gz; do
-    nome_campione=$(basename "$fq1" .fq.1.gz)
-    fq2="$campioni_folder/${nome_campione}.fq.2.gz"
+# Ciclo su tutti i file .1.fq.gz presenti
+for fq1 in "$campioni_folder"/*.1.fq.gz; do
+    nome_campione=$(basename "$fq1" .1.fq.gz)
+    fq2="$campioni_folder/${nome_campione}.2.fq.gz"
 
     if [[ -f "$fq2" ]]; then
         echo "Processo campione: $nome_campione"

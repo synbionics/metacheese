@@ -47,6 +47,22 @@ Docker container costruito su Ubuntu 18.04 con i seguenti tool e ambienti:
 ## Costruzione e utilizzo
 Da terminale:
 
+
+
+# Build dell'immagine
+docker build -t bio-tools .
+# Build dell'immagine con il compose
+docker compose up -d
+# per eseguire il container: 
+docker exec -it bio-tools-container bash
+
+# in bioenv per scaricare il database_metaphlan
+metaphlan dummy.fq --input_type fastq \
+  --bowtie2db ../../data/input/database_metaphlan \
+  --bowtie2out /dev/null -o /dev/null --nproc 4
+
+
+
 ```bash
 # Build dell'immagine
 docker build -t metacheese .
@@ -63,4 +79,9 @@ conda info --envs
 ./check_tools.sh
 bash xxx.sh
 conda activate bioenv
+
+#per scaricare i pacchetti R
+ conda install -c bioconda bioconductor-microbiome
+ conda install -c conda-forge -c bioconda \
+>   r-vegan r-optparse r-ape r-rbiom r-compositions bioconductor-microbiome
 

@@ -6,14 +6,14 @@ conda activate bioenv
 
 # Step 1: Estrazione dei file .fq.gz dagli archivi .tar
 cd ../../data/input/rawdata  # Directory con i file .tar
-output_dir00="../../data/tmp/01_AdapterRemoval"  # Dove salvare i .fq.gz
-output_dir01="../../data/tmp/01_AdapterRemoval"  # Dove mettere gli output di AdapterRemoval
+output_dir00="../../processed/01_AdapterRemoval"  # Dove salvare i .fq.gz
+output_dir01="../../processed/01_AdapterRemoval"  # Dove mettere gli output di AdapterRemoval
 
 mkdir -p "$output_dir00" "$output_dir01"
 
 echo "Estrazione dei file .fq.gz dagli archivi .tar..."
-for tar_file in ../../data/tmp/step00_01/rawdata/X204SC24020161-Z01-F003_01.tar \
-                ../../data/tmp/step00_01/rawdata/X204SC24020161-Z01-F003_02.tar; do
+for tar_file in X204SC24020161-Z01-F003_01.tar \
+                X204SC24020161-Z01-F003_02.tar; do
     tar -tf "$tar_file" | grep -E '^D?_?PR_[0-9]+|^ND_[0-9]+.*\.fq\.gz$' | while read -r filepath; do
         filename=$(basename "$filepath")
         tar -xf "$tar_file" -C "$output_dir00" --strip-components=$(echo "$filepath" | tr -cd '/' | wc -c) "$filepath"

@@ -6,6 +6,8 @@ conda activate bowtieenv
 output_folder="@07_var1@"
 input_folder="@07_var2@"
 
+mkdir -p "$output_folder"
+
 # Ciclo attraverso tutti i file .fasta
 for file in "$input_folder"/*.fasta; do
     # Estrai il nome del file senza l'estensione

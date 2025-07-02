@@ -12,8 +12,8 @@ sample_directory="../../data/processed/01_AdapterRemoval"
 output_dir="../../data/processed/03_bowtie2_output"
 mkdir -p "$output_dir"
 
-# Prefisso del database Bowtie2 (senza estensione .bt2)
-meta_database="../../data/input/gene/Bos_taurus/Bos_taurus"
+# Prefisso del database Bowtie2 
+meta_database="../../data/input/gene/Bos_taurus/Bos_taurus.bt2"
 
 echo "[$(date)] Mapping in: $sample_directory  →  $output_dir  su DB: $meta_database"
 

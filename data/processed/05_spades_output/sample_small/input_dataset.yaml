@@ -1,0 +1,7 @@
+- "left reads":
+  - "/main/data/processed/03_Bowtie2_output/sample_small.1.fq.gz"
+  "number": !!int "1"
+  "orientation": "fr"
+  "right reads":
+  - "/main/data/processed/03_Bowtie2_output/sample_small.2.fq.gz"
+  "type": "paired-end"

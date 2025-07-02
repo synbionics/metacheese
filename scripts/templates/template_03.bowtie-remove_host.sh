@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!bin/bash
 set -euo pipefail
 
 # --- Attiva Conda e ambiente con Bowtie2 installato ---
@@ -12,7 +12,7 @@ sample_directory="@03_var1@"
 output_dir="@03_var2@"
 mkdir -p "$output_dir"
 
-# Prefisso del database Bowtie2 (senza estensione .bt2)
+# Prefisso del database Bowtie2 
 meta_database="@03_var3@"
 
 echo "[$(date)] Mapping in: $sample_directory  →  $output_dir  su DB: $meta_database"

@@ -4,7 +4,9 @@ source /opt/conda/etc/profile.d/conda.sh
 conda activate bowtieenv
 
 output_folder="../../data/processed/07_Bowtie_Index"
-input_folder="../../data/processed/05_spades_output/contigs/filtered"
+input_folder="../../data/processed/06_spades_output/filtered"
+
+mkdir -p "$output_folder"
 
 # Ciclo attraverso tutti i file .fasta
 for file in "$input_folder"/*.fasta; do

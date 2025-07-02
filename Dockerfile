@@ -11,7 +11,6 @@ RUN apt-get update && apt-get install -y \
     python \
     python-dev \
     openjdk-11-jre-headless \
-    r-base \
     unzip \
     zlib1g-dev \
     libbz2-dev \
@@ -21,6 +20,19 @@ RUN apt-get update && apt-get install -y \
     locales \
     perl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# Installa R 4.2 da CRAN (repository ufficiale aggiornato)
+RUN apt-get update && apt-get install -y software-properties-common dirmngr gnupg apt-transport-https ca-certificates && \
+    wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/cran-r.gpg && \
+    echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/" >> /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install -y r-base
+
+
+# Installa i pacchetti R necessari (inclusi phyloseq e microbiome)
+COPY install_R_packages.R /tmp/
+RUN Rscript /tmp/install_R_packages.R
 
 # Localizzazione
 RUN locale-gen en_US.UTF-8
@@ -55,18 +67,25 @@ RUN conda create -y -n bioenv python=3.8 && \
     conda run -n bioenv conda install -y \
         adapterremoval=2.3.3 \
         metaphlan=3.0.14 \
-        checkm-genome \
-        samtools \
-        spades=3.13.0 \
+        spades=3.15.5 \
         metabat2
 
+#RUN conda create -y -n humannenv python=3.8 && \
+#    conda run -n bioenv conda install -y \
+#        humann=3.9
+        
+
+# Ambiente per CheckM e CheckM2
+#RUN conda create -y -n checkmenv python=3.8 && \
+#    conda run -n checkmenv conda install -y \
+#        checkm-genome \
+#        checkm2=1.1.0
+
+#RUN conda run -n checkmenv checkm2 database --download
+
 # Ambiente separato solo per Bowtie2 (richiede Python 2.7 e Perl 5.22)
-RUN conda create -y -n bowtieenv python=2.7 bowtie2=2.3.3.1 samtools
+#RUN conda create -y -n bowtieenv python=2.7 bowtie2=2.3.3.1 samtools
 
-# R package utile
-RUN Rscript -e "install.packages('optparse', repos='http://cran.rstudio.com/')"
-
-# ...existing code...
 
 # Copia file nel container
 COPY scripts /main/scripts
@@ -75,14 +94,12 @@ COPY data /main/data
 COPY docs /main/docs
 COPY examples /main/examples
 
-# Script per attivare l'ambiente Conda
-COPY activate_tool.sh /main/activate_tool.sh
-# Script per controllare gli strumenti installati
-COPY check_tools.sh /main/check_tools.sh
-RUN chmod +x /main/activate_tool.sh /main/check_tools.sh
+
+#COPY scripts/utils/fix_checkm2_models.sh /main/scripts/utils/
+#RUN bash /main/scripts/utils/fix_checkm2_models.sh
+
 
 # Working dir
 WORKDIR /main
 
 CMD ["/bin/bash"]
-# ...existing code...

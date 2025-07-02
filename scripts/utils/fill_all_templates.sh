@@ -86,7 +86,7 @@ SEPS["step08_09"]="_"
 # step10_11
 STEPS["step10_11"]="\
   template_10-11-11b.metabat.sh \
-  scripts/pipeline/10-11.metabat.sh \
+  scripts/pipeline/10-11-11b.metabat.sh \
   10-11 \
   var1=dir1 var2=dir2 var3=dir3 var4=dir4 var5=dir5 par1=par1 par2=par2\
 "
@@ -94,7 +94,7 @@ SEPS["step10_11"]="_"
 
 # step12_13
 STEPS["step12_13"]="\
-  template_12-13_checkm.sh \
+  template_12-13.checkm.sh \
   scripts/pipeline/12-13.checkm.sh \
   12-13 \
   var1=var1 var2=var2 var3=var3 par1=par1 par2=par2 par3=par3\
@@ -103,8 +103,8 @@ SEPS["step12_13"]="_"
 
 # step14
 STEPS["step14"]="\
-  template_14_filter-metadata.sh \
-  scripts/pipeline/14.filter_metadata.sh \
+  template_14.filter-metadata.sh \
+  scripts/pipeline/14.filter-metadata.sh \
   14 \
   var1=var1 var2=var2 var3=var3 var4=var4 \
   var5=var5 var6=var6 var7=var7 var8=var8\
@@ -144,7 +144,7 @@ for STEP_KEY in "${!STEPS[@]}"; do
     ph="${pair%%=*}"
     yaml_key="${pair#*=}"
     value=$(yq eval -r ".${STEP_KEY}.${yaml_key}" "$CONFIG_FILE")
-    echo "    • Replacing @$PREFIX$SEP$ph@ → $value"
+    #echo "    • Replacing @$PREFIX$SEP$ph@ → $value"
     sed -i "s|@$PREFIX$SEP$ph@|$value|g" "$OUTPUT_PATH"
   done
 

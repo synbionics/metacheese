@@ -1,29 +1,35 @@
 #!/bin/bash
+# filepath: c:\Users\davip\Desktop\script bioinformatica\06.spades_filtering.sh
 
+#!/bin/bash
+# filepath: c:\Users\davip\Desktop\script bioinformatica\06.spades_filtering.sh
+
+# Attiva Conda
 source /opt/conda/etc/profile.d/conda.sh
 conda activate bioenv
 
-# sbatch in /hpc/group/G_MICRO/CoagMicroGP_shotgun/04_spades_output
-cd ../../data/processed/05_spades_output
-mkdir -p contigs
+# Parametri (verranno sostituiti dal generatore o configuratore)
+input_folder="../../data/processed/05_spades_output"               # Cartella dove si trovano i contigs da Spades
+output_contig_folder="../../data/processed/06_spades_output/contigs"       # Dove copiare i contigs rinominati
+output_filtered_folder="../../data/processed/06_spades_output/filtered"     # Dove salvare i contigs filtrati
+threads="32"                 # Numero di thread da usare per la filtrazione
 
-for file in $(find . -type f -name "contigs.fasta"); do
-    parent_dir=$(dirname "$file")
-    if [[ "$parent_dir" == "." ]]; then
-        parent_dir_name="campioneA"
-    else
-        parent_dir_name=$(basename "$parent_dir")
-    fi
-    cp "$file" "contigs/$parent_dir_name.fasta"
+# 📁 Crea cartelle se non esistono
+mkdir -p "$output_contig_folder"
+mkdir -p "$output_filtered_folder"
+
+# 🔁 Trova e copia tutti i contigs.fasta rinominandoli con il nome del campione
+find "$input_folder" -type f -name "contigs.fasta" | while read -r file; do
+    sample_dir=$(basename "$(dirname "$file")")
+    cp "$file" "$output_contig_folder/${sample_dir}.fasta"
 done
 
-cd contigs
+# 🧪 Filtra i contigs >500bp in parallelo con xargs
+find "$output_contig_folder" -type f -name "*.fasta" -print0 | xargs -0 -P "$threads" -I {} bash -c '
+  x="{}"
+  base=$(basename "$x")
+  awk "BEGIN{RS=\">\";ORS=\"\"} length(\$0)>500 {print \">\"\$0}" "$x" > "'"$output_filtered_folder"'/${base%.fasta}.fasta_sort.fasta"
+'
 
-mkdir -p filtered
-
-find . -type f -name "*.fasta" -print0 | xargs -0 -P 32 -I {} bash -c 'x="{}"; output_dir="filtered/$(dirname "$x")"; mkdir -p "$output_dir"; awk "BEGIN{RS=\">\";ORS=\"\"} length(\$0)>500 {print \">\"\$0}" "$x" > "$output_dir/${x##*/}_sort.fasta"'
-
-#Ordina e filtra i file contigs generati da spades in base alla lunghezza delle sequenze
-#Il comando "find" filtra i contigs
-
+# Disattiva Conda
 conda deactivate

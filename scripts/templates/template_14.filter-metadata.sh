@@ -1,5 +1,9 @@
 #!/bin/bash
-# filepath: c:\Users\davip\Desktop\script bioinformatica\template\template_14_filter-metadata.sh
+set -euo pipefail
+
+# Inizializza Conda e attiva ambiente bioenv 
+source /opt/conda/etc/profile.d/conda.sh
+conda activate bioenv
 
 # Parametri comuni (tutti sostituibili via template)
 TSV_FILE="@14_var1@"
@@ -53,3 +57,6 @@ else
     echo "Scelta non valida."
     exit 1
 fi
+
+# --- Disattiva Conda ---
+conda deactivate

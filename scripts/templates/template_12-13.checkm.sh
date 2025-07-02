@@ -1,9 +1,9 @@
 #!/bin/bash
-# filepath: c:\Users\davip\Desktop\script bioinformatica\12-13.checkm_checkm2.sh
+set -euo pipefail
 
-module load apptainer
-module load checkm
-module load checkm2
+# Inizializza Conda e attiva ambiente bioenv 
+source /opt/conda/etc/profile.d/conda.sh
+conda activate checkmenv
 
 # Controllo container
 test -n "$CHECKM_CONTAINER" || { echo "CHECKM_CONTAINER non definito"; exit 1; }
@@ -40,3 +40,6 @@ if [[ "$choice" == "2" || "$choice" == "3" ]]; then
         --output-directory "$CHECKM2_OUT" \
         -x .fa
 fi
+
+# --- Disattiva Conda ---
+conda deactivate

@@ -14,18 +14,18 @@ output_folder="../../data/processed/05_spades_output"
 # Crea cartella di output se non esiste
 mkdir -p "$output_folder"
 
-# Ciclo su tutti i file .fq.1.gz presenti
-for fq1 in "$campioni_folder"/*.fq.1.gz; do
-    nome_campione=$(basename "$fq1" .fq.1.gz)
-    fq2="$campioni_folder/${nome_campione}.fq.2.gz"
+# Ciclo su tutti i file .1.fq.gz presenti
+for fq1 in "$campioni_folder"/*.1.fq.gz; do
+    nome_campione=$(basename "$fq1" .1.fq.gz)
+    fq2="$campioni_folder/${nome_campione}.2.fq.gz"
 
     if [[ -f "$fq2" ]]; then
         echo "Processo campione: $nome_campione"
         
         # Esegui SPAdes
         spades.py -1 "$fq1" -2 "$fq2" \
+            --meta -t 32 --memory 64 \
             --only-assembler \
-            --isolate -t 1 --memory 2 \  
             -o "$output_folder/$nome_campione"
     else
         echo "ATTENZIONE: File $fq2 mancante per $nome_campione"
