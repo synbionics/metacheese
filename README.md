@@ -6,7 +6,7 @@ The program runs the main steps of a metagenomic analysis and saves results in n
 
 ## Workflow
 
-![Workflow overview](docs/img/workflow.svg)
+![Workflow overview](docs/img/workflow.png)
 
 
 ---
@@ -353,3 +353,4 @@ If the value is empty (`""`), **nothing is preserved** and the entire folder is 
 ## Crediti e licenza
 
 Autore/i: Dorin / Davide  
+
