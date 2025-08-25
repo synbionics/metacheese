@@ -1,110 +1,117 @@
 # metacheese
-Pipeline per analizzare campioni di formaggio a partire da file FASTQ compressi (`.fq.gz`).  
-Il programma esegue tutti i passaggi principali dell’analisi metagenomica e salva i risultati in cartelle numerate, una per ogni fase del processo.
+Pipeline to analyze cheese samples starting from compressed FASTQ files (`.fq.gz`).  
+The program runs the main steps of a metagenomic analysis and saves results in numbered folders—one for each stage of the process.
 
 ---
 
-## Funzionalità principali
-La pipeline esegue automaticamente questi passaggi, in ordine:
+## Workflow
 
-1. **Estrazione e rimozione adattatori**  
+![Workflow overview](docs/img/workflow.svg)
+
+
+---
+
+## Main features
+The pipeline automatically executes these steps, in order:
+
+1. **Extraction and adapter trimming**  
    *Tool: AdapterRemoval*  
-   Estrae i file FASTQ dagli archivi (se presenti), poi rimuove le sequenze di adattatori e di bassa qualità, ottenendo reads “puliti”.
+   Extracts FASTQ files from archives (if present), then removes adapter and low-quality sequences, producing “clean” reads.
 
-2. **Filtraggio del genoma ospite**  
+2. **Host genome filtering**  
    *Tool: Bowtie2*  
-   Allinea i reads al genoma della specie ospite (es. *Bos taurus*) e scarta quelli che si mappano, lasciando solo le sequenze microbiche.
+   Aligns reads to the host species genome (e.g., *Bos taurus*) and discards mapped reads, keeping only microbial sequences.
 
-3. **Profilazione tassonomica**  
+3. **Taxonomic profiling**  
    *Tool: MetaPhlAn*  
-   Stima la composizione tassonomica del campione, indicando specie presenti e abbondanza relativa.
+   Estimates the sample’s taxonomic composition, reporting detected species and relative abundance.
 
-4. **Profilazione funzionale**  
+4. **Functional profiling**  
    *Tool: HUMAnN*  
-   Analizza le funzioni biologiche/metaboliche potenzialmente presenti nel microbioma.
+   Analyzes the biological/metabolic functions potentially present in the microbiome.
 
-5. **Assemblaggio del metagenoma**  
+5. **Metagenome assembly**  
    *Tool: SPAdes*  
-   Ricostruisce sequenze contigue (contig) assemblando i reads.
+   Reconstructs contiguous sequences (contigs) by assembling reads.
 
-6. **Filtraggio dei contig**  
-   *Tool: script custom*  
-   Seleziona solo i contig sopra soglie di lunghezza/copertura.
+6. **Contig filtering**  
+   *Tool: custom scripts*  
+   Selects contigs above length/coverage thresholds.
 
-7. **Creazione indici per binning**  
+7. **Index creation for binning**  
    *Tool: Bowtie2*  
-   Costruisce indici per il binning dei contig.
+   Builds indices for contig binning.
 
-8. **Mappatura e calcolo copertura**  
-   *Tool: Bowtie2 + script custom*  
-   Mappa nuovamente i reads e calcola la copertura di ciascun contig.
+8. **Read mapping and coverage calculation**  
+   *Tool: Bowtie2 + custom scripts*  
+   Maps reads back and computes coverage for each contig.
 
-9. **Binning metagenomico**  
+9. **Metagenomic binning**  
    *Tool: MetaBAT2*  
-   Raggruppa i contig in MAGs (genomi metagenomici assemblati).
+   Groups contigs into MAGs (Metagenome-Assembled Genomes).
 
-10. **Valutazione qualità MAGs**  
+10. **MAG quality assessment**  
     *Tool: CheckM, CheckM2*  
-    Valuta completezza e contaminazione dei MAGs.
+    Evaluates completeness and contamination of MAGs.
 
-11. **Filtraggio e annotazione MAGs di alta qualità**  
-    *Tool: script custom + TORMES*  
-    Seleziona i MAGs migliori e li annota (geni, pathway, resistenze, ecc).
+11. **Filtering and annotation of high-quality MAGs**  
+    *Tool: custom scripts + TORMES*  
+    Selects the best MAGs and annotates them (genes, pathways, resistance, etc.).
 
-12. **Analisi finale e report**  
-    *Tool: script custom, R*  
-    Produce tabelle riassuntive e grafici dei risultati.
+12. **Final analysis and reporting**  
+    *Tool: custom scripts, R*  
+    Produces summary tables and plots.
 
 ---
 
-## Struttura del progetto
+## Project structure
 
     metacheese/
-    ├── config/                   # File di configurazione globali della pipeline
-    │   └── Config.yml            # Parametri principali della pipeline
+    ├── config/                   # Global configuration files
+    │   └── Config.yml            # Main pipeline parameters
     │
-    ├── data/                     # Dati di supporto e reference
-    │   ├── calculate_diversity.R # Analisi di diversità in R
-    │   └── gene/                 # Genomi reference (es. Bos taurus)
+    ├── data/                     # Support data and references
+    │   ├── calculate_diversity.R # Diversity analysis in R
+    │   └── gene/                 # Reference genomes (e.g., Bos taurus)
     │
-    ├── docs/                     # Documentazione tecnica e grafici
+    ├── docs/                     # Technical docs and figures
     │
-    ├── input/                    # Dati di input organizzati per campione
-    │   ├── campione_prova1/      # Esempio/test
-    │   └── PDO/                  # Dataset reale
+    ├── input/                    # Input data organized by sample
+    │   ├── campione_prova1/      # Example/test
+    │   └── PDO/                  # Real dataset
     │       ├── D_PR_01A_L2_1.fq.gz
     │       └── ...
     │
-    ├── output/                   # Output ordinato per run (data + codice)
+    ├── output/                   # Output organized by run (date + code)
     │   ├── 20250728_PDMIDR/
     │   │   ├── 01_AdapterRemoval/
     │   │   ├── 03_bowtie2_output/
     │   │   └── config.yml
     │   └── ...
     │
-    ├── scripts/                  # Script e template della pipeline
-    │   ├── run_pipeline.sh       # Script master
-    │   ├── pipeline/             # Script dei singoli step
-    │   ├── templates/            # Template degli script
-    │   └── utils/                # Utility (es. build_bowtie2_index.sh, delete.sh)
+    ├── scripts/                  # Pipeline scripts and templates
+    │   ├── run_pipeline.sh       # Master script
+    │   ├── pipeline/             # Individual step scripts
+    │   ├── templates/            # Script templates
+    │   └── utils/                # Utilities (e.g., build_bowtie2_index.sh, delete.sh)
     │
-    ├── Dockerfile                # Ambiente Docker riproducibile
-    ├── docker-compose.yml        # Setup avanzato (volumi, container)
-    └── README.md                 # Questo file
+    ├── Dockerfile                # Reproducible Docker environment
+    ├── docker-compose.yml        # Advanced setup (volumes, container)
+    └── README.md                 # This file
 
 ---
 
-## Requisiti
+## Requirements
 
-- **Docker** (consigliata versione ≥ 20.10)  
-- **docker-compose** (per gestione container e volumi)  
-- Risorse consigliate: **≥64 GB RAM** e CPU multi-core (alcuni step sono molto pesanti).  
+- **Docker** (recommended version ≥ 20.10)  
+- **docker-compose** (for container and volume management)  
+- Recommended resources: **≥ 64 GB RAM** and multi-core CPU (some steps are heavy).
 
-Non serve installare tool aggiuntivi: **tutto è già incluso nel container**.
+No extra tools required: **everything is already included in the container**.
 
 ---
 
-## Installazione Docker
+## Docker installation
 
 ### Linux (Ubuntu/Debian)
     sudo apt-get update
@@ -112,51 +119,51 @@ Non serve installare tool aggiuntivi: **tutto è già incluso nel container**.
     sudo systemctl enable docker --now
 
 ### Windows/Mac
-Scarica *Docker Desktop* e segui le istruzioni dal sito ufficiale.
+Download *Docker Desktop* and follow the official instructions.
 
-### Verifica installazione
+### Verify installation
     docker --version
     docker compose version
     docker run hello-world
 
-Se compare il messaggio “Hello from Docker!”, l’installazione è OK.
+If you see “Hello from Docker!”, the installation is OK.
 
 ---
 
 ## Preparazione dell’ambiente
 
-1) Posizionati nella cartella del progetto (clonata o copiata localmente):
+1) Go to the project folder (cloned or copied locally):
     
         cd metacheese
 
-2) Costruisci l’immagine Docker:
+2) Build the Docker image:
     
         docker build -t metacheese .
 
-3) Verifica che l’immagine esista:
+3) Check the image exists:
     
         docker images
 
-4) Avvio consigliato con docker-compose (volumi già mappati):
+4) Recommended start with docker-compose (volumes already mapped):
     
         docker compose up -d
-        docker ps                  # Container in esecuzione
+        docker ps                  # Running containers
         docker exec -it metacheese-container bash
 
-   - Le cartelle locali restano sincronizzate con il container.  
-   - Puoi monitorare lo stato direttamente in `output/`.
+   - Local folders remain synced with the container.
+   - You can monitor progress directly under `output/`.
 
-5) (Alternativa) Avvio manuale del container:
+5) (Alternative) Manual container start:
 
         docker run -it --rm           -v $PWD/scripts:/main/scripts           -v $PWD/config:/main/config           -v $PWD/data:/main/data          -v $PWD/input:/main/input           -v $PWD/output:/main/output           metacheese /bin/bash
 
-6) Gestione rapida
+6) Quick management
 
-   - Ferma il container:
+   - Stop the container:
 
          docker stop metacheese-container
 
-   - Elenca container/immagini e rimozione:
+   - List containers/images and remove:
 
          docker ps -a
          docker images
@@ -165,37 +172,37 @@ Se compare il messaggio “Hello from Docker!”, l’installazione è OK.
 
 ---
 
-## Preparazione del genoma ospite (Bowtie2 index)
+## Host genome preparation (Bowtie2 index)
 
-Per il filtraggio dell’ospite (es. *Bos taurus*) serve un **indice Bowtie2**.
+For host filtering (eg. *Bos taurus*) you need **Bowtie2 index**.
 
-### Passi
+### Steps
 
-1) **Scarica il genoma** (file FASTA genomico, estensione `.fna/.fa/.fasta`) da NCBI/Ensembl in locale.
+1) **Download the genome** (genomic FASTA, `.fna/.fa/.fasta`) from NCBI/Ensembl to your machine.
 
-2) **Prepara la cartella specie** e **sposta il FASTA** dentro (eseguire comandi dentro la cartella del progetto "metacheese"):
+2) **Create the species folder** and **move the FASTA** inside it (run these in the project folder “metacheese”):
 
     mkdir -p data/gene/Bos_taurus
     mv /percorso/del/tuo/file/GCA_002263795.4_ARS-UCD2.0_genomic.fna data/gene/Bos_taurus/
-    # opzionale (solo per chiarezza): rinomina il file
+    # optional (for clarity): rename the file
     mv data/gene/Bos_taurus/GCA_002263795.4_ARS-UCD2.0_genomic.fna data/gene/Bos_taurus/genome.fna
 
-   > Va bene **qualsiasi nome** file, purché sia dentro `data/gene/Bos_taurus/` e con estensione `.fa/.fna/.fasta`.
+   > **Any filename** is fine as long as it’s inside `data/gene/Bos_taurus/` with `.fa/.fna/.fasta`.
 
-3) **Costruisci l’indice** (lanciare **dentro al container**):
+3) **Build the index** (run **inside the container**):
 
     bash scripts/build_bowtie2_index.sh
 
-   Quando richiesto, inserisci:
+   When prompted, enter:
 
     Bos_taurus
 
-### Risultato atteso
+### Expected result  
 
-Lo script crea i file indice con **prefisso** `data/gene/Bos_taurus/Bos_taurus`, come si aspetta il `Config.yml`.
+The script creates index files with **prefix** `data/gene/Bos_taurus/Bos_taurus`, as expected by `Config.yml`.
 
     data/gene/Bos_taurus/
-    ├── genome.fna                                # (o il tuo .fna/.fa/.fasta)
+    ├── genome.fna                                # (or your .fna/.fa/.fasta)
     ├── Bos_taurus.1.bt2
     ├── Bos_taurus.2.bt2
     ├── Bos_taurus.3.bt2
@@ -206,40 +213,40 @@ Lo script crea i file indice con **prefisso** `data/gene/Bos_taurus/Bos_taurus`,
 
 ## Esempio rapido d’uso (Quickstart)
 
-1) **Prepara i dati di input**  
-   Crea una cartella dentro `input/` (es. `input/PDO/`) e inserisci i file `*.fq.gz` da analizzare.
+1) **Prepare input data**  
+   Create a folder under `input/` (e.g., `input/PDO/`) and place the `*.fq.gz` files to analyze.
 
-2) **(Opzionale) Configura le risorse**  
-   Modifica `config/Config.yml` per impostare thread/RAM e altri parametri di alcuni step.
+2) **(Optional) Configure resources**  
+   Edit `config/Config.yml` to set threads/RAM and other step parameters.
 
-3) **Avvia la pipeline**
-
-        bash scripts/run_pipeline.sh
-
-   - Scegli `1` (nuova esecuzione)  
-   - Inserisci il **nome della cartella input** (es. `PDO`)  
-   - Inserisci un **codice descrittivo** (es. `PDMIDR`)  
-   - Verrà creata `output/<data>_<codice>` (es. `output/20250728_PDMIDR`).
-
-4) **Durante la run**  
-   Gli step vengono eseguiti in ordine e i risultati salvati in sottocartelle dentro `output/<data_codice>/`.
-
-5) **Riprendere una run esistente**
+3) **Run the pipeline**
 
         bash scripts/run_pipeline.sh
 
-   - Scegli `2` (continua esecuzione)  
-   - Inserisci il nome completo della cartella output (es. `20250728_PDMIDR`)  
-   - Indica lo step da cui ripartire (es. `05` o `04b-last`).
+   - Choose `1` (new run)  
+   - Enter the **input folder name** (e.g.,s. `PDO`)  
+   - Enter a **descriptive code** (e.g., `PDMIDR`)  
+   - This will create `output/<data>_<codice>` (e.g., `output/20250728_PDMIDR`).
+
+4) **During the run**  
+   Steps are executed in order and results are saved in subfolders under `output/<data_codice>/`.
+
+5) **Resume an existing run**
+
+        bash scripts/run_pipeline.sh
+
+   - Choose `2` (continue run)  
+   - Enter the full output folder name (e.g., `20250728_PDMIDR`)  
+   - Specify the step to restart from (e.g., `05` or `04b-last`).
 
 ---
 
-## Output e risultati
+## Outputs and results
 
-Alla fine di ogni esecuzione trovi una nuova cartella in `output/` con nome `data_codice` (es. `20250728_PDMIDR`).  
-Ogni fase ha la propria sottocartella con i file generati da quello step.
+After each run, you’ll find a new folder under `output/` named `data_codice` (e.g., 20250728_PDMIDR).
+Each phase has its own subfolder containing the files produced by that step.
 
-Struttura tipica:
+Typical structure:
 
     output/20250728_PDMIDR/
     ├── 01_AdapterRemoval/       # Reads filtrati e puliti dagli adattatori
@@ -258,63 +265,64 @@ Struttura tipica:
     ├── 15_tormes_MAGs/          # Annotazioni finali (TORMES)
     └── config.yml               # Parametri usati per la run
 
-> Suggerimento: controlla che ogni cartella contenga file aggiornati; cartelle vuote possono indicare errori in step precedenti.
+> Tip: ensure each folder contains up-to-date files; empty folders may indicate errors in previous steps.
 
 ---
 
-## Pulizia selettiva dell’output
+## Selective output cleanup
 
-Per fare spazio o ripetere alcuni step senza perdere tutto, usa:
+To free space or rerun specific steps without deleting everything, use:
 
     bash scripts/clean_output_folders.sh
 
-**Cosa fa:** chiede quale cartella `output/<data_codice>` ripulire e, per ciascuna sottocartella definita, elimina i contenuti **preservando** eventuali file/sottocartelle indicati in una lista.
+**What it does:** 
+asks which `output/<data_codice>` folder to clean and, for each defined subfolder, deletes contents while **preserving** any files/subfolders listed.
 
-### Configurazione (in testa allo script)
+### Configuration (at the top of the script)
 
-- `TO_DELETE`: elenco delle sottocartelle da processare (relative a `output/<data_codice>/`).  
-  Puoi commentare quelle che non vuoi toccare.
+- `TO_DELETE`: list of subfolders to process (relative to `output/<data_codice>/`).
+Comment out those you don’t want to touch.
 
-- `PRESERVE`: mappa (associative array) delle eccezioni da tenere per ciascuna cartella.  
-  Valori separati da virgola, supporta **wildcard** e **sottocartelle**:
-  - Esempio preconfigurato:
+- `PRESERVE`: map (associative array) of exceptions to keep for each folder.
+Comma-separated values; supports **wildcards** and **subfolders**:
+  - Preconfigured example:
     - `PRESERVE["04_metaphlan_output"]="diversity,merged_abundance_table.txt,*.txt"`
     - `PRESERVE["05_spades_output"]="contigs/filtered"`
 
-Se il valore è vuoto (`""`), **non viene preservato nulla** e l’intera cartella viene eliminata.
+If the value is empty (`""`), **nothing is preserved** and the entire folder is removed.
 
-### Esempio tipico
+### Typical example
 
-1. Lancia lo script:
+1. Run the script:
     
         bash scripts/clean_output_folders.sh
 
-2. Scegli la cartella di output (es. `20250728_PDMIDR`) e conferma.  
-   Lo script eliminerà i contenuti delle cartelle elencate in `TO_DELETE`, tenendo quanto definito in `PRESERVE`.
+2. Choose the output folder (e.g., `20250728_PDMIDR`) and confirm.  
+   The script will delete contents of the folders listed in `TO_DELETE`, keeping whatever is defined in `PRESERVE`.
 
-> **Attenzione:** le eliminazioni sono **definitive**. Fai un backup se devi conservare i risultati.
+> **Warning:** deletions are **permanent**. Back up results you need to keep.
 
 ---
 
-## Troubleshooting essenziale
+## Essential troubleshooting
 
-- **Docker non parte / permessi**  
-  Aggiungi l’utente al gruppo docker e riavvia la sessione:  
+- **Docker won’t start / permissions**  
+  Add your user to the docker group and restart the session::  
       sudo usermod -aG docker $USER
 
-- **`yq` non trovato**  
-  All’interno del container è già installato. Se lanci `run_pipeline.sh` fuori dal container, potresti non averlo nel PATH.
+- **`yq` not found**  
+  It’s already installed inside the container. If you run `run_pipeline.sh` outside the container, you may not have it in your PATH.
 
-- **Risorse insufficienti (RAM/CPU)**  
-  Riduci la dimensione del dataset o aumenta le risorse. Alcuni step (SPAdes, MetaBAT) sono particolarmente pesanti.
+- **Insufficient resources (RAM/CPU)**  
+  Reduce dataset size or increase resources. Some steps (SPAdes, MetaBAT) are particularly heavy.
 
-- **Indice Bowtie2 mancante**  
-  Esegui prima:  
+- **Missing Bowtie2 index**  
+  Run first:  
       bash scripts/build_bowtie2_index.sh
 
 ---
 
-## Citazioni
+## Citation
 
 **AdapterRemoval v2**
    Schubert, Lindgreen, and Orlando (2016). AdapterRemoval v2: rapid adapter trimming, identification, and read merging. BMC Research Notes, 12;9(1):88 <http://bmcresnotes.biomedcentral.com/articles/10.1186/s13104-016-1900-2>
@@ -344,4 +352,4 @@ Se il valore è vuoto (`""`), **non viene preservato nulla** e l’intera cartel
 
 ## Crediti e licenza
 
-Autore/i: Dorin / Peraz  
+Autore/i: Dorin / Davide  
