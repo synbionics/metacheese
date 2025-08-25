@@ -1,54 +1,54 @@
 #!/bin/bash
+set -euo pipefail
 
 source /opt/conda/etc/profile.d/conda.sh
 conda activate bowtieenv
 
-# Define input and output directories
 FASTQ_DIR="@08-09_var1@"
 INDEX_DIR="@08-09_var2@"
 OUTPUT_DIR="@08-09_var3@"
-
-# Ensure output directory exists
 mkdir -p "$OUTPUT_DIR"
 
-# Itera su tutti i file .fq.1.gz presenti
-for fq1 in "$FASTQ_DIR"/*.1.fq.gz; do
+for fq1 in "$FASTQ_DIR"/*.fq.1.gz; do
     base_name=$(basename "$fq1")
-    file_name="${base_name%.1.fq.gz}"
-    fq2="$FASTQ_DIR/${file_name}.2.fq.gz"
+    file_name="${base_name%.fq.1.gz}"
+    fq2="$FASTQ_DIR/${file_name}.fq.2.gz"
 
-    # Verifica che esista il file mate
     if [[ ! -f "$fq2" ]]; then
-        echo "File mancante: $fq2"
-        continue
+        echo "WARNING: Mate file missing $fq2. Skipping $file_name." >&2
+        exit 1
     fi
 
-    echo "Processo campione: $file_name"
-
-    # Path base dell'indice Bowtie
     index_base="${INDEX_DIR}/${file_name}.fasta_sort_index_base"
+    if [[ ! -f "${index_base}.1.bt2" ]]; then
+        echo "ERROR: Bowtie2 index missing for $file_name in $INDEX_DIR" >&2
+        exit 1
+    fi
 
-    # Output
+    echo "Processing sample: $file_name"
+
     bam_file="${OUTPUT_DIR}/${file_name}.bam"
     sorted_bam="${OUTPUT_DIR}/${file_name}.sorted.bam"
-    bam_index="${OUTPUT_DIR}/${file_name}.sorted.bam.bai"
     idxstats_file="${OUTPUT_DIR}/${file_name}.sorted.bam.idxstat"
 
-    # Esegue Bowtie2
+    # Run Bowtie2 + samtools view
     bowtie2 -x "$index_base" \
         -1 "$fq1" -2 "$fq2" \
         -q --no-unal --very-sensitive-local \
         -p 4 2> "${OUTPUT_DIR}/${file_name}_bowtie2.log" | \
-        samtools view -bS -o "$bam_file" -
+        samtools view -bS -o "$bam_file" - 
 
-    # Ordina BAM
+    # Sort
     samtools sort "$bam_file" -o "$sorted_bam"
 
-    # Indicizza BAM
+    # Index
     samtools index "$sorted_bam"
 
-    # Statistiche
+    # Stats
     samtools idxstats "$sorted_bam" > "$idxstats_file"
+
+    echo "Sample $file_name completed"
 done
 
+echo "Mapping and statistics completed for all samples"
 conda deactivate

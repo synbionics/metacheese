@@ -2,14 +2,15 @@ version: "3.8"
 
 services:
   bio-tools-app:
-    image: bio-tools
-    container_name: bio-tools-container
+    image: metacheese
+    container_name: metacheese-container
     volumes:
       - ./scripts:/main/scripts
       - ./config:/main/config
       - ./data:/main/data
       - ./docs:/main/docs
-      - ./examples:/main/examples
+      - ./input:/main/input
+      - ./output:/main/output
     tty: true
     stdin_open: true
     command: bash

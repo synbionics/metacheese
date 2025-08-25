@@ -1,10 +1,23 @@
-#!/bin/bash --login
+#!/bin/bash
+set -eo pipefail
 
-module load apptainer
-module load tormes
+source /opt/conda/etc/profile.d/conda.sh
+conda activate tormes-1.3.0
 
-cd /hpc/group/DOPnonDOP_noema/
+WORKDIR="@15_var1@"
+INPUT="@15_var2@"
+OUTPUT="@15_par1@"
+THREADS="@15_par2@"
 
-INPUT=@15_var1@
+cd "$WORKDIR"
 
-apptainer exec "$TORMES_CONTAINER" tormes --metadata $INPUT --output @15_par1@ --threads @15_par2@
+[[ -d "$WORKDIR" ]] || { echo "Error: working directory $WORKDIR not found" >&2; exit 1; }
+[[ -f "$INPUT" ]] || { echo "Error: metadata file $INPUT not found" >&2; exit 1; }
+
+echo "Running TORMES on $INPUT in directory $WORKDIR, output to $OUTPUT using $THREADS threads"
+
+tormes --metadata "$INPUT" --output "$OUTPUT" --threads "$THREADS"
+
+echo "TORMES successfully completed in $WORKDIR/$OUTPUT"
+
+conda deactivate

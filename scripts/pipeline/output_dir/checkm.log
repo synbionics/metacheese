@@ -1,9 +1,0 @@
-[2025-07-01 11:42:56] INFO: CheckM v1.2.2
-[2025-07-01 11:42:56] INFO: checkm taxonomy_wf domain Bacteria input_dir output_dir
-[2025-07-01 11:42:56] INFO: CheckM data: /opt/conda/envs/checkmenv/checkm_data
-[2025-07-01 11:42:56] INFO: [CheckM - taxon_set] Generate taxonomic-specific marker set.
-[2025-07-01 11:42:59] INFO: Marker set for Bacteria contains 104 marker genes arranged in 58 sets.
-[2025-07-01 11:42:59] INFO: Marker set inferred from 5449 reference genomes.
-[2025-07-01 11:42:59] INFO: Marker set written to: output_dir/Bacteria.ms
-[2025-07-01 11:42:59] INFO: { Current stage: 0:00:02.829 || Total: 0:00:02.829 }
-[2025-07-01 11:42:59] INFO: [CheckM - analyze] Identifying marker genes in bins.

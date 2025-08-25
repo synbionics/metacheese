@@ -1,24 +1,33 @@
 #!/bin/bash
+set -euo pipefail
 
 source /opt/conda/etc/profile.d/conda.sh
 conda activate bowtieenv
 
 output_folder="@07_var1@"
 input_folder="@07_var2@"
-
 mkdir -p "$output_folder"
 
-# Ciclo attraverso tutti i file .fasta
+echo "Creating Bowtie2 indexes in $output_folder from fasta files in $input_folder"
+
+found=false
 for file in "$input_folder"/*.fasta; do
-    # Estrai il nome del file senza l'estensione
-    base_name=$(basename -- "$file")
-    file_name="${base_name%.fasta}"
+    [[ -e "$file" ]] || continue
+    found=true
 
+    base_name=$(basename "$file" .fasta)
+    echo "Indexing $base_name"
 
-    #Domanda: perchè di nuovo bowtie2-build?
-    # Esegui bowtie2-build per ogni file
-    bowtie2-build "$file" "$output_folder/${file_name}_index_base" -p @07_par1@ #Per ogni file .fasta viene fatto bowtie
-    #bowtie crea un indice di genoma che servirà successivamete per l'allineamento delle letture
+    if ! bowtie2-build "$file" "$output_folder/${base_name}_index_base" -p @07_par1@; then
+        echo "ERROR: bowtie2-build failed for $file" >&2
+        exit 1
+    fi
 done
 
+if ! $found; then
+    echo "No .fasta file found in $input_folder" >&2
+    exit 1
+fi
+
+echo "Index creation completed successfully."
 conda deactivate

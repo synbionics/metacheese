@@ -1,45 +1,47 @@
 #!/bin/bash
 set -euo pipefail
 
-# Inizializza Conda e attiva ambiente bioenv 
 source /opt/conda/etc/profile.d/conda.sh
-conda activate checkmenv
 
-# Controllo container
-test -n "$CHECKM_CONTAINER" || { echo "CHECKM_CONTAINER non definito"; exit 1; }
-test -n "$CHECKM2_CONTAINER" || { echo "CHECKM2_CONTAINER non definito"; exit 1; }
-
-# Directory
 INPUT_DIR="@12-13_var1@"
 CHECKM_OUT="@12-13_var2@"
 CHECKM2_OUT="@12-13_var3@"
+mkdir -p "$CHECKM_OUT" "$CHECKM2_OUT"
 
-mkdir -p "$CHECKM_OUT" "$CHECKM2_OUT" "$TMPDIR"
+if [[ ! -d "$INPUT_DIR" ]]; then
+    echo "Error: input folder $INPUT_DIR not found" >&2
+    exit 1
+fi
 
-# Scegli cosa eseguire: argomento o interattivo
-choice="$1"
-if [[ -z "$choice" ]]; then
-    echo "Cosa vuoi eseguire?"
+choice="${1:-}"
+
+while [[ "$choice" != "1" && "$choice" != "2" && "$choice" != "3" ]]; do
+    echo "What do you want to run?"
     echo "1) CheckM"
     echo "2) CheckM2"
-    echo "3) Entrambi"
-    read -p "Scegli (1/2/3): " choice
-fi
+    echo "3) Both"
+    #read -p "Choose (1/2/3): " choice
+    choice="2"
+done
 
-# Esegui CheckM
 if [[ "$choice" == "1" || "$choice" == "3" ]]; then
-    echo "Eseguo CheckM..."
-    apptainer exec "$CHECKM_CONTAINER" checkm lineage_wf -t @12-13_par1@ -x fa "$INPUT_DIR" "$CHECKM_OUT" --pplacer_threads @12-13_par2@ -f "$CHECKM_OUT/output_checkm.txt" 2>&1
+    conda activate checkmenv
+    echo "Running CheckM..."
+    checkm lineage_wf \
+        -t @12-13_par1@ -x fa "$INPUT_DIR" "$CHECKM_OUT" \
+        --pplacer_threads @12-13_par2@ \
+        -f "$CHECKM_OUT/output_checkm.txt" || { echo "Error in CheckM"; exit 1; }
+    conda deactivate
 fi
 
-# Esegui CheckM2
 if [[ "$choice" == "2" || "$choice" == "3" ]]; then
-    echo "Eseguo CheckM2..."
-    apptainer exec "$CHECKM2_CONTAINER" checkm2 predict --threads @12-13_par3@ \
+    conda activate checkm2env
+    echo "Running CheckM2..."
+    checkm2 predict --threads @12-13_par3@ \
         --input "$INPUT_DIR" \
         --output-directory "$CHECKM2_OUT" \
-        -x .fa
+        -x .fa || { echo "Error in CheckM2"; exit 1; }
+    conda deactivate
 fi
 
-# --- Disattiva Conda ---
-conda deactivate
+echo "CheckM analysis completed successfully."
