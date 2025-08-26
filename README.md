@@ -130,7 +130,7 @@ If you see “Hello from Docker!”, the installation is OK.
 
 ---
 
-## Preparazione dell’ambiente
+## Environment setup
 
 1) Go to the project folder (cloned or copied locally):
     
@@ -183,7 +183,7 @@ For host filtering (eg. *Bos taurus*) you need **Bowtie2 index**.
 2) **Create the species folder** and **move the FASTA** inside it (run these in the project folder “metacheese”):
 
     mkdir -p data/gene/Bos_taurus
-    mv /percorso/del/tuo/file/GCA_002263795.4_ARS-UCD2.0_genomic.fna data/gene/Bos_taurus/
+    mv /path/to/your/file/GCA_002263795.4_ARS-UCD2.0_genomic.fna data/gene/Bos_taurus/
     # optional (for clarity): rename the file
     mv data/gene/Bos_taurus/GCA_002263795.4_ARS-UCD2.0_genomic.fna data/gene/Bos_taurus/genome.fna
 
@@ -211,7 +211,7 @@ The script creates index files with **prefix** `data/gene/Bos_taurus/Bos_taurus`
     └── Bos_taurus.rev.2.bt2
 ---
 
-## Esempio rapido d’uso (Quickstart)
+## Quickstart example
 
 1) **Prepare input data**  
    Create a folder under `input/` (e.g., `input/PDO/`) and place the `*.fq.gz` files to analyze.
@@ -226,10 +226,10 @@ The script creates index files with **prefix** `data/gene/Bos_taurus/Bos_taurus`
    - Choose `1` (new run)  
    - Enter the **input folder name** (e.g.,s. `PDO`)  
    - Enter a **descriptive code** (e.g., `PDMIDR`)  
-   - This will create `output/<data>_<codice>` (e.g., `output/20250728_PDMIDR`).
+   - This will create `output/<date>_<code>` (e.g., `output/20250728_PDMIDR`).
 
 4) **During the run**  
-   Steps are executed in order and results are saved in subfolders under `output/<data_codice>/`.
+   Steps are executed in order and results are saved in subfolders under `output/<date>_<code>/`.
 
 5) **Resume an existing run**
 
@@ -249,21 +249,21 @@ Each phase has its own subfolder containing the files produced by that step.
 Typical structure:
 
     output/20250728_PDMIDR/
-    ├── 01_AdapterRemoval/       # Reads filtrati e puliti dagli adattatori
-    ├── 03_bowtie2_output/       # Reads microbici + summary mapping
-    ├── 04_metaphlan_output/     # Tabelle di abbondanza tassonomica
-    ├── 04b_humann_output/       # Profilazione funzionale (HUMAnN)
-    ├── 05_spades_output/        # Contig assemblati (.fasta)
-    ├── 06_contig_filter/        # Contig filtrati per qualità/lunghezza
-    ├── 07_Bowtie_Index/         # Indici Bowtie2 per binning
-    ├── 08_mapping_coverage/     # Coverage dei contig
-    ├── 10_metabat_depth/        # Profondità per binning
+    ├── 01_AdapterRemoval/       # Adapter-trimmed/cleaned reads
+    ├── 03_bowtie2_output/       # Microbial reads + mapping summary
+    ├── 04_metaphlan_output/     # Taxonomic abundance tables
+    ├── 04b_humann_output/       # Functional profiling (HUMAnN)
+    ├── 05_spades_output/        # Assembled contigs (.fasta)
+    ├── 06_contig_filter/        # Contigs filtered by quality/length
+    ├── 07_Bowtie_Index/         # Bowtie2 indices for binning
+    ├── 08_mapping_coverage/     # Contig coverage
+    ├── 10_metabat_depth/        # Depth for binning
     ├── 11_metabat_MAG/          # MAGs (FASTA)
-    ├── 12_checkm/               # Report qualità (CheckM)
-    ├── 13_checkm2/              # Report qualità (CheckM2)
-    ├── 14_MAGs_high_quality/    # MAGs selezionati + metadata
-    ├── 15_tormes_MAGs/          # Annotazioni finali (TORMES)
-    └── config.yml               # Parametri usati per la run
+    ├── 12_checkm/               # Quality reports (CheckM)
+    ├── 13_checkm2/              # Quality reports (CheckM2)
+    ├── 14_MAGs_high_quality/    # Selected MAGs + metadata
+    ├── 15_tormes_MAGs/          # Final annotations (TORMES)
+    └── config.yml               # Parameters used for the run
 
 > Tip: ensure each folder contains up-to-date files; empty folders may indicate errors in previous steps.
 
@@ -348,9 +348,9 @@ If the value is empty (`""`), **nothing is preserved** and the entire folder is 
    GigaScience, Volume 10, Issue 2, February 2021, giab008, https://doi.org/10.1093/gigascience/giab008*
 
 **Tormes**
-   Narciso M. Quijada, David Rodríguez-Lázaro, Jose María Eiros e Marta Hernández (2019). TORMES: una pipeline automatizzata per l'analisi dell'intero genoma batterico. Bioinformatica , 35(21), 4207–4212, https://doi.org/10.1093/bioinformatics/btz220
+   Narciso M. Quijada, David Rodríguez-Lázaro, Jose María Eiros e Marta Hernández (2019). TORMES: an automated pipeline for whole bacterial genome analysis. Bioinformatica , 35(21), 4207–4212, https://doi.org/10.1093/bioinformatics/btz220
 
-## Crediti e licenza
+## Credits & License
 
-Autore/i: Dorin / Davide  
+Author(s): Dorin / Davide  
 
