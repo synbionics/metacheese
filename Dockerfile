@@ -106,14 +106,13 @@ RUN ln -s /opt/conda/envs/bioenv/bin/merge_metaphlan_tables.py /usr/local/bin/me
 RUN mkdir -p /main/db/humann/chocophlan && \
     mkdir -p /main/db/humann/uniref
 
-RUN conda create -y -n humannenv python=3.7 && \
-    conda run -n humannenv bash -c "\
-      conda install -y -c bioconda humann=3.9 && \
-      pip install humann && \
-      humann_databases --help && \
-      humann_databases --download chocophlan full /main/db/humann/chocophlan && \
-      humann_databases --download uniref uniref90_diamond /main/db/humann/uniref \
-    "
+RUN conda create -y -n humannenv python=3.7
+RUN conda run -n humannenv conda install -y -c bioconda humann=3.9
+RUN conda run -n humannenv pip install humann
+RUN conda run -n humannenv humann --version
+RUN conda run -n humannenv humann_databases --help
+RUN conda run -n humannenv humann_databases --download chocophlan full /main/db/humann/chocophlan
+RUN conda run -n humannenv humann_databases --download uniref uniref90_diamond /main/db/humann/uniref
 
 # ======================================
 # ALTRI AMBIENTI CONDA
